@@ -17,7 +17,7 @@ export const navItems = [
     { href: "#open-source", text: "Open source" },
 ];
 
-export const aptRepository = "https://golobitch.github.io/keber/apt";
+export const aptRepository = "https://keber.io/apt";
 
 export type Install = {
     title: string;

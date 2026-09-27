@@ -10,15 +10,15 @@ Requires Node 20 or later.
 
 ```sh
 npm install          # install dependencies
-npm run dev          # dev server at http://localhost:4321/keber/
+npm run dev          # dev server at http://localhost:4321/
 npm run build        # static build into dist/
-npm run preview      # serve the dist/ build at http://localhost:4321/keber/
+npm run preview      # serve the dist/ build at http://localhost:4321/
 ```
 
-The site is configured for its GitHub Pages address, `https://golobitch.github.io/keber/`. That's why it's served under `/keber/` locally too. To host it elsewhere, override both values at build time:
+The site is configured for its own domain, `https://keber.io`, and is served from the root. To host it under a subpath instead, override both values at build time:
 
 ```sh
-SITE_URL=https://example.com BASE_PATH=/ npm run build
+SITE_URL=https://golobitch.github.io BASE_PATH=/keber npm run build
 ```
 
 Links to public files and pages go through `withBase()` in `src/lib/url.ts`, so they keep working under any base path.
@@ -26,6 +26,16 @@ Links to public files and pages go through `withBase()` in `src/lib/url.ts`, so 
 ## Deploying
 
 The site lives in the `website/` folder of the [keber](https://github.com/golobitch/keber) repo. The `pages` workflow there builds it and deploys `dist/` to GitHub Pages on every push to `main` that touches `website/`. It can also be run by hand from the Actions tab.
+
+GitHub Pages serves it at `keber.io`. The domain is set in the repository's **Settings → Pages → Custom domain**; a CNAME file in `public/` would do nothing, because deploys made by a workflow ignore it. DNS for the apex points at GitHub Pages:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` |
+| AAAA | `@` | `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153` |
+| CNAME | `www` | `golobitch.github.io` |
+
+The old `golobitch.github.io` address redirects here once the custom domain is set.
 
 ## Layout
 

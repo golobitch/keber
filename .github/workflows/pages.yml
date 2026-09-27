@@ -1,7 +1,7 @@
 name: pages
 
-# Builds the landing page in website/ and publishes it to
-# https://golobitch.github.io/keber/.
+# Builds the landing page in website/ and publishes it to https://keber.io. The domain is set
+# under Settings → Pages → Custom domain, not by a CNAME file: a workflow deploy ignores those.
 on:
   push:
     branches: [main]
