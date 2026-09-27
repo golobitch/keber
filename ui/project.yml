@@ -44,14 +44,16 @@ targets:
     settings:
       groups: [tigerbeetle]
       base:
-        PRODUCT_NAME: TigerBeetle Explorer
+        PRODUCT_NAME: Keber
+        # Kept from the app's first name: the sandbox container, UserDefaults and the saved
+        # connections are all keyed by it, and changing it would start everyone from scratch.
         PRODUCT_BUNDLE_IDENTIFIER: com.golobitch.tb-explorer
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_ENTITLEMENTS: Sources/TBExplorer/TBExplorer.entitlements
         ENABLE_HARDENED_RUNTIME: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        INFOPLIST_KEY_CFBundleDisplayName: TigerBeetle Explorer
+        INFOPLIST_KEY_CFBundleDisplayName: Keber
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.developer-tools
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         GENERATE_INFOPLIST_FILE: YES

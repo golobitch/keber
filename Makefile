@@ -30,7 +30,7 @@ VERSION_FLAGS := $(if $(VERSION),MARKETING_VERSION=$(VERSION)) $(if $(BUILD_NUMB
 
 release: generate
 	$(XCB) -scheme TBExplorer -configuration Release -arch arm64 -arch x86_64 ONLY_ACTIVE_ARCH=NO $(VERSION_FLAGS) build -quiet
-	@echo "App: $(DERIVED)/Build/Products/Release/TigerBeetle Explorer.app"
+	@echo "App: $(DERIVED)/Build/Products/Release/Keber.app"
 
 # Unit + integration tests. The scheme's Test pre-action starts and seeds the dev cluster.
 test: generate

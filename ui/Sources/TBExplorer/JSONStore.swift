@@ -20,6 +20,9 @@ extension JSONDecoder {
 }
 
 /// Application Support directory for this app's stores, created on demand.
+///
+/// The folder keeps the app's first name, `tb-explorer`: renaming it would orphan every saved
+/// connection and format, for a name nobody sees.
 enum AppStorageLocation {
     static func url(for file: String) -> URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]

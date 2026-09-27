@@ -5,7 +5,7 @@ import TBKit
 
 /// Debug-only launch arguments for development and screenshots, e.g.
 ///
-///     open "TigerBeetle Explorer.app" --args -TBConnect 127.0.0.1:3001 -TBOpen transfer:100011
+///     open "Keber.app" --args -TBConnect 127.0.0.1:3001 -TBOpen transfer:100011
 ///
 /// - `-TBOpen`: `overview`, `search`, `accounts`, `transfers`, `ledger:<id>`, `account:<id>` or
 ///   `transfer:<id>`; several separated by commas are opened in order, building a stack

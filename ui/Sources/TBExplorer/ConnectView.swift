@@ -45,7 +45,7 @@ struct ConnectView: View {
             Image(systemName: "cylinder.split.1x2")
                 .font(.system(size: 56, weight: .light))
                 .foregroundStyle(.tint)
-            Text("TigerBeetle Explorer")
+            Text("Keber")
                 .font(.title2.weight(.semibold))
             Text("Read-only browser for TigerBeetle clusters")
                 .foregroundStyle(.secondary)
@@ -210,7 +210,7 @@ struct ConnectErrorView: View {
                     }
                 }
                 .font(.callout)
-                Text("Use a TigerBeetle Explorer build whose client matches the server release.")
+                Text("Use a Keber build whose client matches the server release.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

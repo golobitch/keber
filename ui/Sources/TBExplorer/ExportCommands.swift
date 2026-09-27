@@ -10,7 +10,7 @@ import TBKit
 @Observable
 final class ExportSource {
     var payload: ExportPayload
-    /// Names the file: `tb-explorer-transfers-ledger840-20260918-2211`.
+    /// Names the file: `keber-transfers-ledger840-20260918-2211`.
     var name: String
     /// Human-readable query, written into the JSON envelope.
     var query: String?

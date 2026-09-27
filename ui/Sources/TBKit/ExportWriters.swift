@@ -77,7 +77,7 @@ public struct JSONExportWriter: ExportWriter {
         var envelope: [String] = [
             "  \"kind\": \(Self.string(provenance.kind))",
             "  \"exported_at\": \(Self.string(stamp))",
-            "  \"exported_by\": \(Self.string("tb-explorer, tb_client \(TBClient.clientVersion)"))",
+            "  \"exported_by\": \(Self.string("keber, tb_client \(TBClient.clientVersion)"))",
         ]
         if let cluster = provenance.clusterID {
             envelope.append("  \"cluster_id\": \(Self.string(String(cluster)))")

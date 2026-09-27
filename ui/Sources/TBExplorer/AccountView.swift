@@ -149,7 +149,7 @@ private struct AccountTransfersTab: View {
         let list = PagedList<Transfer>()
         _list = State(initialValue: list)
         _export = State(initialValue: ExportSource(
-            payload: .transfers(list), name: "tb-explorer-transfers-account\(account.id)",
+            payload: .transfers(list), name: "keber-transfers-account\(account.id)",
             ledger: account.ledger))
     }
 
@@ -382,7 +382,7 @@ private struct BalanceHistoryTab: View {
         self.style = style
         _export = State(initialValue: ExportSource(
             payload: .balances([], ledger: account.ledger),
-            name: "tb-explorer-balances-account\(account.id)", ledger: account.ledger))
+            name: "keber-balances-account\(account.id)", ledger: account.ledger))
     }
 
     var body: some View {

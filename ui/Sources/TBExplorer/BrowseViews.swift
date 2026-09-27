@@ -18,7 +18,7 @@ struct AllAccountsView: View {
     init() {
         let list = PagedList<Account>()
         _list = State(initialValue: list)
-        _export = State(initialValue: ExportSource(payload: .accounts(list), name: "tb-explorer-accounts"))
+        _export = State(initialValue: ExportSource(payload: .accounts(list), name: "keber-accounts"))
     }
 
     var body: some View {
@@ -101,7 +101,7 @@ struct AllTransfersView: View {
     init() {
         let list = PagedList<Transfer>()
         _list = State(initialValue: list)
-        _export = State(initialValue: ExportSource(payload: .transfers(list), name: "tb-explorer-transfers"))
+        _export = State(initialValue: ExportSource(payload: .transfers(list), name: "keber-transfers"))
     }
 
     var body: some View {
