@@ -11,7 +11,7 @@ struct TBExplorerApp: App {
                 .environment(session)
                 .frame(minWidth: 900, minHeight: 560)
                 // An open window can service a link…
-                .handlesExternalEvents(preferring: [DeepLink.scheme], allowing: [DeepLink.scheme])
+                .handlesExternalEvents(preferring: Set(DeepLink.schemes), allowing: Set(DeepLink.schemes))
         }
         // …so following one lands where you are looking instead of stacking up new windows.
         .handlesExternalEvents(matching: [])

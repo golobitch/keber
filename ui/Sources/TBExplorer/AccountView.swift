@@ -58,7 +58,7 @@ struct AccountView: View {
                     RouteButton(route: .account(account.id), open: browser.copyLink) {
                         Label("Copy Link", systemImage: "link")
                     }
-                    .help("Copy a tb-explorer:// link to this account")
+                    .help("Copy a keber:// link to this account")
                 }
                 CurrencyFormatToggle(isOn: $currencyFormat)
                 Button { Task { await load() } } label: { Label("Reload", systemImage: "arrow.clockwise") }

@@ -56,7 +56,7 @@ struct ExportTests {
     @Test func jsonEnvelopeNamesTheCluster() throws {
         let provenance = ExportProvenance(
             kind: "transfers", clusterID: 7, query: "query_transfers ledger=840",
-            link: "tb-explorer://transfers?cluster=7")
+            link: "keber://transfers?cluster=7")
         let text = exportText(
             [transfer()], format: .json, context: ExportContext(), provenance: provenance)
         let parsed = try JSONSerialization.jsonObject(with: Data(text.utf8)) as! [String: Any]
@@ -64,7 +64,7 @@ struct ExportTests {
         #expect(parsed["kind"] as? String == "transfers")
         #expect(parsed["cluster_id"] as? String == "7")
         #expect(parsed["query"] as? String == "query_transfers ledger=840")
-        #expect(parsed["source"] as? String == "tb-explorer://transfers?cluster=7")
+        #expect(parsed["source"] as? String == "keber://transfers?cluster=7")
         #expect((parsed["columns"] as? [String])?.contains("amount") == true)
     }
 

@@ -147,7 +147,7 @@ final class Session {
     func receive(_ url: URL) {
         var cluster: UInt128?
         guard let link = DeepLink(url, cluster: &cluster) else {
-            linkMessage = "\u{201C}\(url.absoluteString)\u{201D} is not a TigerBeetle Explorer link."
+            linkMessage = "\u{201C}\(url.absoluteString)\u{201D} is not a Keber link."
             return
         }
         pendingLink = link

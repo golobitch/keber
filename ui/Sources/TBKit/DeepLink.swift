@@ -1,6 +1,6 @@
 import Foundation
 
-/// A location in the app that can be written down: `tb-explorer://transfer/100539?cluster=0`.
+/// A location in the app that can be written down: `keber://transfer/100539?cluster=0`.
 ///
 /// The cluster is part of the link because TigerBeetle ids are only unique within a cluster —
 /// without it, a link from someone else's cluster would resolve a different object with the same
@@ -15,16 +15,20 @@ public enum DeepLink: Equatable, Sendable {
     case account(UInt128)
     case transfer(UInt128)
 
-    public static let scheme = "tb-explorer"
+    /// The scheme every link the app writes uses.
+    public static let scheme = "keber"
+    /// Every scheme the app opens: its own, and the one it had as TigerBeetle Explorer, so a link
+    /// someone pasted into a ticket before the rename still lands where it pointed.
+    public static let schemes = [scheme, "tb-explorer"]
 
     public init?(_ url: URL, cluster: inout UInt128?) {
-        guard url.scheme?.lowercased() == Self.scheme else { return nil }
+        guard let scheme = url.scheme?.lowercased(), Self.schemes.contains(scheme) else { return nil }
 
         // Read the location out of the string rather than from `host` and `pathComponents`:
         // Foundation versions disagree about whether the first segment of
-        // `tb-explorer:transfer/100539` is a host or the start of the path, and this grammar is
+        // `keber:transfer/100539` is a host or the start of the path, and this grammar is
         // small enough that the disagreement is not worth inheriting.
-        var rest = Substring(url.absoluteString).dropFirst(Self.scheme.count + 1)
+        var rest = Substring(url.absoluteString).dropFirst(scheme.count + 1)
         if rest.hasPrefix("//") { rest = rest.dropFirst(2) }
 
         var query = Substring("")

@@ -24,22 +24,22 @@ struct DeepLinkTests {
     }
 
     @Test func writesTheExpectedURL() {
-        #expect(DeepLink.transfer(100_539).url().absoluteString == "tb-explorer://transfer/100539")
-        #expect(DeepLink.accounts.url().absoluteString == "tb-explorer://accounts")
+        #expect(DeepLink.transfer(100_539).url().absoluteString == "keber://transfer/100539")
+        #expect(DeepLink.accounts.url().absoluteString == "keber://accounts")
         #expect(
             DeepLink.account(1015).url(cluster: 7).absoluteString
-                == "tb-explorer://account/1015?cluster=7")
+                == "keber://account/1015?cluster=7")
     }
 
     @Test func carriesTheClusterWhenPresent() {
         var cluster: UInt128?
-        #expect(parse("tb-explorer://transfer/100539?cluster=42", cluster: &cluster) == .transfer(100_539))
+        #expect(parse("keber://transfer/100539?cluster=42", cluster: &cluster) == .transfer(100_539))
         #expect(cluster == 42)
     }
 
     @Test func leavesTheClusterUnsetWhenAbsent() {
         var cluster: UInt128?
-        #expect(parse("tb-explorer://transfer/100539", cluster: &cluster) == .transfer(100_539))
+        #expect(parse("keber://transfer/100539", cluster: &cluster) == .transfer(100_539))
         #expect(cluster == nil)
     }
 
@@ -52,26 +52,36 @@ struct DeepLinkTests {
     }
 
     @Test func acceptsHexIDs() {
-        #expect(parse("tb-explorer://account/0xff") == .account(255))
+        #expect(parse("keber://account/0xff") == .account(255))
     }
 
-    /// The parser also reads `tb-explorer:transfer/100539`, but that spelling is not asserted:
+    /// The parser also reads `keber:transfer/100539`, but that spelling is not asserted:
     /// whether `URL(string:)` accepts it, and where it puts the first segment, varies by
     /// Foundation version. Everything the app produces and macOS delivers uses `//`.
     @Test func ignoresSchemeCase() {
-        #expect(parse("TB-EXPLORER://Transfer/100539") == .transfer(100_539))
+        #expect(parse("KEBER://Transfer/100539") == .transfer(100_539))
+    }
+
+    /// Links written while the app was TigerBeetle Explorer are in tickets and runbooks; they
+    /// keep opening, and what the app writes back is the new scheme.
+    @Test func opensLinksFromBeforeTheRename() {
+        var cluster: UInt128?
+        #expect(parse("tb-explorer://transfer/100539?cluster=42", cluster: &cluster) == .transfer(100_539))
+        #expect(cluster == 42)
+        #expect(parse("TB-EXPLORER://ledger/840") == .ledger(840))
+        #expect(DeepLink(URL(string: "tb-explorer://accounts")!)?.url().absoluteString == "keber://accounts")
     }
 
     @Test func rejectsAnythingElse() {
         #expect(parse("https://example.com/transfer/100539") == nil)
-        #expect(parse("tb-explorer://nonsense/1") == nil)
-        #expect(parse("tb-explorer://transfer") == nil, "an id is required")
-        #expect(parse("tb-explorer://account/not-a-number") == nil)
-        #expect(parse("tb-explorer://ledger/99999999999") == nil, "a ledger is a u32")
+        #expect(parse("keber://nonsense/1") == nil)
+        #expect(parse("keber://transfer") == nil, "an id is required")
+        #expect(parse("keber://account/not-a-number") == nil)
+        #expect(parse("keber://ledger/99999999999") == nil, "a ledger is a u32")
     }
 
     @Test func rejectsAnUnparsableCluster() {
         var cluster: UInt128?
-        #expect(parse("tb-explorer://transfer/1?cluster=abc", cluster: &cluster) == nil)
+        #expect(parse("keber://transfer/1?cluster=abc", cluster: &cluster) == nil)
     }
 }

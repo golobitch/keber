@@ -60,7 +60,7 @@ struct TransferView: View {
                     RouteButton(route: .transfer(chain.transfer.id), open: browser.copyLink) {
                         Label("Copy Link", systemImage: "link")
                     }
-                    .help("Copy a tb-explorer:// link to this transfer")
+                    .help("Copy a keber:// link to this transfer")
                 }
                 CurrencyFormatToggle(isOn: $currencyFormat)
                 Button { Task { await load() } } label: { Label("Reload", systemImage: "arrow.clockwise") }

@@ -14,6 +14,8 @@
 			<string>Viewer</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>keber</string>
+				<!-- The app's first name. Kept so links written before the rename still open. -->
 				<string>tb-explorer</string>
 			</array>
 		</dict>
