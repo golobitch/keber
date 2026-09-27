@@ -1,51 +1,55 @@
-# tb-tui — TigerBeetle Explorer in the terminal
+# keber — Keber in the terminal
 
 A read-only terminal browser for [TigerBeetle](https://tigerbeetle.com) clusters, with k9s-style
 navigation. Same data as the [macOS app](../ui), on the machine the cluster actually runs on.
 
-**Read-only.** `tb-tui` links the six read operations of `tb_client` and nothing else — there is no
+**Read-only.** `keber` links the six read operations of `tb_client` and nothing else — there is no
 create path in the binary to disable. CI fails the build if `create_accounts` or `create_transfers`
 appears anywhere under `cli/`.
+
+Until September 2026 this was `tb-tui`. Homebrew follows the rename, the Debian package replaces
+the old one, and a config kept in `~/.config/tb-tui/` goes on being read until `~/.config/keber/`
+exists. On apt, point the source at the new address below: the old one stops publishing.
 
 ## Install
 
 **Homebrew** (macOS and Linux):
 
 ```sh
-brew install golobitch/tap/tb-tui
+brew install golobitch/tap/keber
 ```
 
-**Debian and Ubuntu**, from the apt repository, which keeps `tb-tui` upgrading with everything
+**Debian and Ubuntu**, from the apt repository, which keeps `keber` upgrading with everything
 else:
 
 ```sh
 sudo install -d /usr/share/keyrings
-curl -fsSL https://golobitch.github.io/tb-explorer/apt/golobitch-archive-keyring.asc \
+curl -fsSL https://golobitch.github.io/keber/apt/golobitch-archive-keyring.asc \
   | sudo gpg --dearmor -o /usr/share/keyrings/golobitch-archive-keyring.gpg
 
-sudo tee /etc/apt/sources.list.d/tb-explorer.sources >/dev/null <<'EOF'
+sudo tee /etc/apt/sources.list.d/keber.sources >/dev/null <<'EOF'
 Types: deb
-URIs: https://golobitch.github.io/tb-explorer/apt
+URIs: https://golobitch.github.io/keber/apt
 Suites: stable
 Components: main
 Architectures: amd64 arm64
 Signed-By: /usr/share/keyrings/golobitch-archive-keyring.gpg
 EOF
 
-sudo apt update && sudo apt install tb-tui
+sudo apt update && sudo apt install keber
 ```
 
 Debian 12 or newer, Ubuntu 22.04 or newer. The `.deb` from a
-[release](https://github.com/golobitch/tb-explorer/releases) installs with `dpkg -i` too.
+[release](https://github.com/golobitch/keber/releases) installs with `dpkg -i` too.
 
 **A tarball**, for anything else: pick your target from the latest `cli-v*`
-[release](https://github.com/golobitch/tb-explorer/releases), check it against `SHA256SUMS`, and
-put `tb-tui` on your `PATH`.
+[release](https://github.com/golobitch/keber/releases), check it against `SHA256SUMS`, and
+put `keber` on your `PATH`.
 
 ## Running
 
 ```sh
-tb-tui --addresses 127.0.0.1:3000 --cluster 0
+keber --addresses 127.0.0.1:3000 --cluster 0
 ```
 
 Against this repo's dev cluster:
@@ -94,14 +98,14 @@ theme.
 ## Themes
 
 ```sh
-tb-tui --list-themes            # ansi, mono, andromeda, catppuccin-mocha, dracula,
+keber --list-themes            # ansi, mono, andromeda, catppuccin-mocha, dracula,
                                 # gruvbox-dark, nord, one-dark, solarized-dark, tokyo-night
-tb-tui --theme nord             # just this run
+keber --theme nord             # just this run
 ```
 
 Or press `:` and type `theme` for a list you can arrow through. The screen repaints as you move,
 so you choose by looking; `enter` keeps it and `esc` puts back the one you arrived with. Keeping a
-theme writes `theme = nord` into `~/.config/tb-tui/config` — **the only file tb-tui ever writes**,
+theme writes `theme = nord` into `~/.config/keber/config` — **the only file keber ever writes**,
 and it never writes to a cluster.
 
 Everything else is a preset: `ansi` is what ships, and the other eight name hex colours, which a
@@ -113,17 +117,17 @@ theme's own background, because a hint you cannot read is not a hint.
 Start from one, and edit:
 
 ```sh
-mkdir -p ~/.config/tb-tui/themes
-tb-tui --dump-theme nord > ~/.config/tb-tui/themes/mine.theme
-tb-tui --theme mine
+mkdir -p ~/.config/keber/themes
+keber --dump-theme nord > ~/.config/keber/themes/mine.theme
+keber --theme mine
 ```
 
-A file in `~/.config/tb-tui/themes/` shadows the preset of the same name, so you can adjust `nord`
+A file in `~/.config/keber/themes/` shadows the preset of the same name, so you can adjust `nord`
 without renaming it. A theme only has to name the roles it changes — everything else keeps its
 default, so this is a complete theme:
 
 ```
-# ~/.config/tb-tui/themes/mine.theme
+# ~/.config/keber/themes/mine.theme
 border.focus = #88c0d0
 flag.pending = #ebcb8b bold
 ```
@@ -153,8 +157,9 @@ included.
 | Verdict | `status.posted`, `status.voided`, `status.expired`, `status.pending`, `status.unknown` |
 | Amounts | `net.negative`, `net.positive` |
 
-`tb-tui --dump-theme` prints the lot with their current values. Which theme you get, highest first:
-`--theme`, `TB_TUI_THEME`, `~/.config/tb-tui/config`, then `ansi`. A theme named on the command
+`keber --dump-theme` prints the lot with their current values. Which theme you get, highest first:
+`--theme`, `KEBER_THEME` (or `TB_TUI_THEME`, its name before the rename), `~/.config/keber/config`,
+then `ansi`. A theme named on the command
 line that will not load is an error; a broken one in the config is reported in the footer and
 ignored, because a preference should not stand between you and a cluster.
 

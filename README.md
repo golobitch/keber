@@ -1,9 +1,18 @@
-# TigerBeetle Explorer
+# Keber
+
+<img src="scripts/icon.svg" alt="The Keber icon: a beetle whose wing cases are a ledger" width="128" align="right">
 
 Read-only browsers for [TigerBeetle](https://tigerbeetle.com) clusters: ledgers, accounts,
 transfers, balance history, and pending → post/void chains.
 
-**Website:** [golobitch.github.io/tb-explorer](https://golobitch.github.io/tb-explorer/)
+**Website:** [golobitch.github.io/keber](https://golobitch.github.io/keber/)
+
+**Why Keber?** *Keber* is Slovenian for the cockchafer, the May beetle. This is a small beetle for
+looking inside a big one, made in Ljubljana, and its icon is a keber whose wing cases are a
+ledger: debits on the left, credits on the right. Until September 2026 the project was called
+TigerBeetle Explorer; old `tb-explorer://` links still open, and Homebrew follows the rename.
+
+Keber is an independent project, not an official TigerBeetle product.
 
 **Read-only, and checked.** Nothing here issues `create_accounts` or `create_transfers` — CI fails
 the build if either string appears in a front end. The only code that writes to a cluster is
@@ -19,13 +28,13 @@ Both front ends talk to TigerBeetle through the official C client (`tb_client`),
 [`Vendor/tigerbeetle/`](Vendor/tigerbeetle) and shared. They are pinned to the same release, and CI
 checks the pin.
 
-![TigerBeetle Explorer showing an account's balances and transfers](docs/images/app-accounts-view.png)
+![Keber showing an account's balances and transfers](docs/images/app-accounts-view.png)
 
 ## Install
 
 ```sh
-brew install --cask golobitch/tap/tb-explorer   # the macOS app
-brew install golobitch/tap/tb-tui               # the terminal UI, macOS and Linux
+brew install --cask golobitch/tap/keber   # the macOS app
+brew install golobitch/tap/keber          # the terminal UI, macOS and Linux
 ```
 
 On Debian and Ubuntu the terminal UI comes from an apt repository, so it upgrades with everything

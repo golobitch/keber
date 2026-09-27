@@ -1,4 +1,4 @@
-# TigerBeetle Explorer — macOS app
+# Keber — macOS app
 
 The native macOS front end: ledgers, accounts, transfers, balance history, and pending → post/void chains. For the terminal front end see [`../cli`](../cli), and for the project as a whole see [the root README](../README.md).
 
@@ -6,16 +6,16 @@ The native macOS front end: ledgers, accounts, transfers, balance history, and p
 
 It's written in SwiftUI and talks to TigerBeetle through the official C client (`tb_client`), linked in as a static library from [`../Vendor`](../Vendor). There's no bundled server or helper process. Requires macOS 15.
 
-![TigerBeetle Explorer showing an account's balances and transfers](../docs/images/app-accounts-view.png)
+![Keber showing an account's balances and transfers](../docs/images/app-accounts-view.png)
 
 ## Install
 
 ```sh
-brew install --cask golobitch/tap/tb-explorer
+brew install --cask golobitch/tap/keber
 ```
 
-Or download `TigerBeetle-Explorer-macos-universal.zip` from the
-[latest release](https://github.com/golobitch/tb-explorer/releases/latest), check it against
+Or download `Keber-macos-universal.zip` from the
+[latest release](https://github.com/golobitch/keber/releases/latest), check it against
 `SHA256SUMS`, and drag the app to `/Applications`. Releases are signed with a Developer ID and
 notarized, so Gatekeeper opens them without a detour through System Settings.
 
@@ -23,7 +23,7 @@ notarized, so Gatekeeper opens them without a detour through System Settings.
 
 The TigerBeetle client is compiled into the app and must be compatible with the server. A mismatch appears in the connection list and the app refuses to connect.
 
-| TigerBeetle Explorer | tb_client | TigerBeetle server |
+| Keber | tb_client | TigerBeetle server |
 | -------------------- | --------- | ------------------ |
 | 0.0.x                | 0.17.9    | 0.17.9             |
 
@@ -44,7 +44,7 @@ The TigerBeetle client protocol doesn't expose the server's release number. The 
   - For a linked transfer: every member of its linked group.
 - **Search**: paste an id (the app detects account vs transfer), or query by ledger, code, user_data_128/64/32 and time range.
 - **Readable amounts**: TigerBeetle stores amounts as integers and ledgers as bare numbers. With **Currency Format** on (the checkbox next to *Newest First*, and in Settings), the ledger id is read as an ISO 4217 numeric code, so ledger 840 shows `123456` as `1.234,56 $` and appears as `840 · USD`. The exact integer stays one hover away, and ledgers that aren't currencies stay raw. Settings ⌘, overrides the name, symbol and decimals per ledger, and names the numeric `code` values (`10 · payment`); overrides are stored per connection in `metadata.json`.
-- **Windows and links**: ⌘N opens another window on the same connection, so two accounts can sit side by side. Each window keeps its own sidebar selection and history; the connection, saved connections and discovered ledgers are shared. **Copy Link** gives a `tb-explorer://transfer/100539?cluster=0` link for the thing you're looking at — from an id's context menu, a table row, a ledger in the sidebar, or the account and transfer toolbars. Opening one lands in the window you're already in. The cluster is part of the link because ids are only unique within a cluster: a link from a different cluster is refused with an explanation rather than resolving a different object with the same id. A link names a place, never how to reach it — it carries no addresses, and opening one never connects. If you aren't connected yet, the link waits until you are.
+- **Windows and links**: ⌘N opens another window on the same connection, so two accounts can sit side by side. Each window keeps its own sidebar selection and history; the connection, saved connections and discovered ledgers are shared. **Copy Link** gives a `keber://transfer/100539?cluster=0` link for the thing you're looking at — from an id's context menu, a table row, a ledger in the sidebar, or the account and transfer toolbars. Opening one lands in the window you're already in. The cluster is part of the link because ids are only unique within a cluster: a link from a different cluster is refused with an explanation rather than resolving a different object with the same id. A link names a place, never how to reach it — it carries no addresses, and opening one never connects. If you aren't connected yet, the link waits until you are. Links from before the rename, `tb-explorer://…`, still open.
 - **Export**: every list — accounts, transfers, balance history — exports to CSV or JSON, either the rows already loaded (⇧⌘E) or the whole result set (⌥⇧⌘E), which re-runs the query and pages to the end with a count and a Cancel. Amounts and ids are written as **exact integers**, and JSON writes them as strings: the largest number JSON represents exactly is 2⁵³, so a u128 id parsed as a number comes back with its low digits rewritten. Readable columns (`amount_formatted`, `ledger_name`, `code_label`) are opt-in per export via a checkbox in the save panel, and timestamps always carry both nanoseconds and UTC ISO 8601. A JSON export also records which cluster and query it came from. Cancelling deletes the partial file.
 - **Settings** (⌘,): **General** sets what to connect to at launch (nothing, by default), whether to reopen the last location, rows per page, and how far a transfer screen scans for a post or void. **Formats** is the ISO 4217 pane described above.
 - **Throughout**: ⌘K opens Go to ID, ⌘F focuses the filter row, ⌘[ and ⌘] go back and forward. ids have Copy / Copy as Hex context menus, and the Go menu has keyboard shortcuts. Light and dark mode follow the system.
@@ -89,7 +89,7 @@ Useful ids: accounts `1001`–`1020`, transfers `100001` and up.
 Debug builds accept launch arguments that connect and open a screen directly. The scheme already passes `-TBConnect 127.0.0.1:3000`; to also open a screen, add `-TBOpen` under Edit Scheme → Run → Arguments, or run from the terminal:
 
 ```sh
-open "build/DerivedData/Build/Products/Debug/TigerBeetle Explorer.app" --args -TBConnect 127.0.0.1:3000 -TBOpen transfer:100011
+open "build/DerivedData/Build/Products/Debug/Keber.app" --args -TBConnect 127.0.0.1:3000 -TBOpen transfer:100011
 ```
 
 `-TBOpen` takes several comma-separated steps to build up a history, and `-TBBack`/`-TBForward` then walk it. `-TBWindows 2` opens a second window, `-TBLink` delivers a deep link, `-TBCopyLink account:1015` prints the link the Copy Link action would produce, and `-TBSnapshot <name>` draws the window to a PNG and quits (`-TBSnapshotStdout` prints it as base64 instead, since the app is sandboxed; `-TBSnapshotWindow <title>` picks which window). `-TBExport transfers:loaded:csv` writes an export into the app container and prints it as `EXPORT:` lines — the sandbox allows no other readable destination — and `…:all:csv:cancel` checks that a cancelled export leaves no file behind. Every setting is an ordinary `UserDefaults` key, so `-general.rowsPerPage 5` and `-export.formatted YES` work the same way.
@@ -100,8 +100,8 @@ Deep links need the app registered with LaunchServices. For a build in `DerivedD
 
 ```sh
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
-  -f "build/DerivedData/Build/Products/Debug/TigerBeetle Explorer.app"
-open "tb-explorer://transfer/100011?cluster=0"
+  -f "build/DerivedData/Build/Products/Debug/Keber.app"
+open "keber://transfer/100011?cluster=0"
 ```
 
 ### Tests
