@@ -91,8 +91,9 @@ Four secrets and one repository, none of which exist until someone makes them. E
 that needs one degrades rather than failing loudly in the wrong place.
 
 **`golobitch/homebrew-tap`** — a public repository named exactly that (the `homebrew-` prefix is
-what makes `golobitch/tap` resolve). `bump-tap.yml` writes `Formula/tb-tui.rb` and
-`Casks/tb-explorer.rb` into it; nothing else should.
+what makes `golobitch/tap` resolve). `bump-tap.yml` writes `Formula/keber.rb`,
+`Casks/keber.rb` and the two rename files that send the old `tb-tui` and `tb-explorer` names to
+them; nothing else should.
 
 **`TAP_TOKEN`** — a fine-grained PAT with contents:write on the tap and nothing else. Without it
 the bump step is skipped and the tap simply goes stale.
@@ -101,7 +102,7 @@ the bump step is skipped and the tap simply goes stale.
 personal key:
 
 ```sh
-gpg --batch --quick-gen-key "TigerBeetle Explorer apt <you@example.com>" default default never
+gpg --batch --quick-gen-key "Keber apt <you@example.com>" default default never
 gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}'   # APT_GPG_KEY_ID
 gpg --armor --export-secret-keys "$KEY_ID"                                 # APT_GPG_PRIVATE_KEY
 ```
@@ -120,10 +121,10 @@ teaching users to pass `[trusted=yes]` is worse than offering no repository at a
 
 ```sh
 # What users get, verified the way they would verify it.
-gh release download cli-v0.1.0 --pattern 'tb-tui-*'
+gh release download cli-v0.1.0 --pattern 'keber-*'
 shasum -a 256 -c SHA256SUMS
 
-brew update && brew install golobitch/tap/tb-tui && tb-tui --help
+brew update && brew install golobitch/tap/keber && keber --help
 docker run --rm -it debian:12   # then follow cli/README.md's apt instructions
 ```
 

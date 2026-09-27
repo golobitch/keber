@@ -58,16 +58,16 @@ jobs:
 
       - name: Package
         run: |
-          NAME=tb-tui-${{ needs.version.outputs.version }}-${{ matrix.target }}
+          NAME=keber-${{ needs.version.outputs.version }}-${{ matrix.target }}
           install -d "dist/$NAME"
-          cp cli/target/${{ matrix.target }}/release/tb-tui "dist/$NAME/"
+          cp cli/target/${{ matrix.target }}/release/keber "dist/$NAME/"
           cp LICENSE cli/README.md "dist/$NAME/"
           tar -czf "$NAME.tar.gz" -C dist "$NAME"
 
       - uses: actions/upload-artifact@v4
         with:
           name: tarball-${{ matrix.target }}
-          path: tb-tui-*.tar.gz
+          path: keber-*.tar.gz
           if-no-files-found: error
 
   # Built inside Debian 12 so the binary runs on Debian 12 and Ubuntu 22.04 too. On the runner
@@ -104,16 +104,16 @@ jobs:
 
       - name: Package
         run: |
-          NAME=tb-tui-${{ needs.version.outputs.version }}-${{ matrix.target }}
+          NAME=keber-${{ needs.version.outputs.version }}-${{ matrix.target }}
           install -d "dist/$NAME"
-          cp cli/target/${{ matrix.target }}/release/tb-tui "dist/$NAME/"
+          cp cli/target/${{ matrix.target }}/release/keber "dist/$NAME/"
           cp LICENSE cli/README.md "dist/$NAME/"
           tar -czf "$NAME.tar.gz" -C dist "$NAME"
 
       - uses: actions/upload-artifact@v4
         with:
           name: tarball-${{ matrix.target }}
-          path: tb-tui-*.tar.gz
+          path: keber-*.tar.gz
           if-no-files-found: error
 
   deb:
@@ -149,7 +149,7 @@ jobs:
         run: cd cli && rustup show && cargo install cargo-deb --locked
 
       - name: Build the package
-        run: cd cli && cargo deb -p tb-tui
+        run: cd cli && cargo deb -p keber
 
       - uses: actions/upload-artifact@v4
         with:
@@ -180,8 +180,9 @@ jobs:
         run: |
           cd assets
           ls -1
-          # Named rather than globbed, so the checksum file can never list itself.
-          shasum -a 256 tb-tui-* > SHA256SUMS
+          # Named rather than globbed, so the checksum file can never list itself. The .deb files
+          # are keber_<version>-1_<arch>.deb, which keber-* does not match, so they are named too.
+          shasum -a 256 keber-* *.deb > SHA256SUMS
           cat SHA256SUMS
 
       # The notes are generated rather than left to GitHub: it picks the previous release by date
@@ -195,7 +196,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: tb-tui ${{ needs.version.outputs.version }}
+          name: keber ${{ needs.version.outputs.version }}
           files: assets/*
           body_path: release-notes.md
           # The macOS app keeps the Latest badge: the website's download button follows

@@ -11,7 +11,7 @@
 set -euo pipefail
 
 OUT="${OUT:-website/dist/apt}"
-REPO="${REPO:-golobitch/tb-explorer}"
+REPO="${REPO:-golobitch/keber}"
 SUITE="${SUITE:-stable}"
 COMPONENT="${COMPONENT:-main}"
 ARCHES="${ARCHES:-amd64 arm64}"
@@ -29,8 +29,8 @@ fi
 
 log "building from $TAG"
 rm -rf "$OUT"
-install -d "$OUT/pool/$COMPONENT/t/tb-tui"
-gh release download "$TAG" --repo "$REPO" --pattern '*.deb' --dir "$OUT/pool/$COMPONENT/t/tb-tui"
+install -d "$OUT/pool/$COMPONENT/k/keber"
+gh release download "$TAG" --repo "$REPO" --pattern '*.deb' --dir "$OUT/pool/$COMPONENT/k/keber"
 
 cd "$OUT"
 for arch in $ARCHES; do
@@ -41,12 +41,12 @@ done
 
 cat > /tmp/apt-ftparchive.conf <<EOF
 APT::FTPArchive::Release::Origin "golobitch";
-APT::FTPArchive::Release::Label "tb-explorer";
+APT::FTPArchive::Release::Label "keber";
 APT::FTPArchive::Release::Suite "$SUITE";
 APT::FTPArchive::Release::Codename "$SUITE";
 APT::FTPArchive::Release::Architectures "$ARCHES";
 APT::FTPArchive::Release::Components "$COMPONENT";
-APT::FTPArchive::Release::Description "TigerBeetle Explorer terminal UI";
+APT::FTPArchive::Release::Description "Keber terminal UI";
 EOF
 apt-ftparchive -c /tmp/apt-ftparchive.conf release "dists/$SUITE" > "dists/$SUITE/Release"
 

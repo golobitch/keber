@@ -47,13 +47,16 @@ jobs:
 
           if [[ "$TAG" == cli-v* ]]; then
             VERSION="${TAG#cli-v}"
-            OUT=tap/Formula/tb-tui.rb
+            OUT=tap/Formula/keber.rb
+            OLD=tap/Formula/tb-tui.rb
+            RENAMES=tap/formula_renames.json
+            OLD_NAME=tb-tui
             mkdir -p tap/Formula
-            cp source/packaging/homebrew/tb-tui.rb.tmpl "$OUT"
+            cp source/packaging/homebrew/keber.formula.rb.tmpl "$OUT"
             sed -i "s|{{VERSION}}|$VERSION|g" "$OUT"
 
             render() {  # slot, target
-              local file="tb-tui-$VERSION-$2.tar.gz"
+              local file="keber-$VERSION-$2.tar.gz"
               local sha; sha="$(fetch_sha "$file")"
               sed -i "s|{{$1_URL}}|$BASE/$file|; s|{{$1_SHA}}|$sha|" "$OUT"
             }
@@ -63,10 +66,13 @@ jobs:
             render LINUX_INTEL  x86_64-unknown-linux-gnu
           elif [[ "$TAG" == ui-v* ]]; then
             VERSION="${TAG#ui-v}"
-            OUT=tap/Casks/tb-explorer.rb
+            OUT=tap/Casks/keber.rb
+            OLD=tap/Casks/tb-explorer.rb
+            RENAMES=tap/cask_renames.json
+            OLD_NAME=tb-explorer
             mkdir -p tap/Casks
-            cp source/packaging/homebrew/tb-explorer.rb.tmpl "$OUT"
-            SHA="$(fetch_sha TigerBeetle-Explorer-macos-universal.zip)"
+            cp source/packaging/homebrew/keber.cask.rb.tmpl "$OUT"
+            SHA="$(fetch_sha Keber-macos-universal.zip)"
             sed -i "s|{{VERSION}}|$VERSION|g; s|{{SHA}}|$SHA|" "$OUT"
           else
             echo "::error::Tag '$TAG' is neither ui-v* nor cli-v*"
@@ -81,12 +87,21 @@ jobs:
           fi
           cat "$OUT"
 
+          # Before the rename the formula was tb-tui and the cask tb-explorer. The tap's rename
+          # file lets `brew upgrade` follow an existing install to keber, and the old definition
+          # goes so nothing new installs under it. Only the kind being published is touched: the
+          # cask's old name must keep working until an app release puts Casks/keber.rb beside it.
+          CURRENT='{}'
+          if [ -f "$RENAMES" ]; then CURRENT="$(cat "$RENAMES")"; fi
+          jq --arg old "$OLD_NAME" '. + {($old): "keber"}' <<<"$CURRENT" > "$RENAMES"
+          rm -f "$OLD"
+
       - name: Commit to the tap
         working-directory: tap
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Formula Casks 2>/dev/null || true
+          git add -A .
           if git diff --cached --quiet; then
             echo "the tap already matches ${{ inputs.tag }}"
             exit 0

@@ -1,16 +1,16 @@
 # Rendered by .github/workflows/bump-tap.yml from a published ui-v* release.
-cask "tb-explorer" do
+cask "keber" do
   version "{{VERSION}}"
   sha256 "{{SHA}}"
 
-  url "https://github.com/golobitch/tb-explorer/releases/download/ui-v#{version}/TigerBeetle-Explorer-macos-universal.zip",
-      verified: "github.com/golobitch/tb-explorer/"
-  name "TigerBeetle Explorer"
+  url "https://github.com/golobitch/keber/releases/download/ui-v#{version}/Keber-macos-universal.zip",
+      verified: "github.com/golobitch/keber/"
+  name "Keber"
   desc "Read-only browser for TigerBeetle clusters"
-  homepage "https://golobitch.github.io/tb-explorer/"
+  homepage "https://golobitch.github.io/keber/"
 
   livecheck do
-    url "https://github.com/golobitch/tb-explorer/releases"
+    url "https://github.com/golobitch/keber/releases"
     # Matches ui-v* only. :github_latest would follow whichever component released most recently,
     # and a cli release would quietly become the app's "new version".
     regex(/ui[._-]v?(\d+(?:\.\d+)+)/i)
@@ -19,9 +19,10 @@ cask "tb-explorer" do
 
   depends_on macos: :sequoia
 
-  app "TigerBeetle Explorer.app"
+  app "Keber.app"
 
-  # The app is sandboxed, so its state lives in a container rather than loose in ~/Library.
+  # The app is sandboxed, so its state lives in a container rather than loose in ~/Library. The
+  # bundle id and folder keep the app's first name, tb-explorer, so the paths do too.
   zap trash: [
     "~/Library/Application Support/tb-explorer",
     "~/Library/Containers/com.golobitch.tb-explorer",

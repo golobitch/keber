@@ -21,7 +21,7 @@ TO=""
 OUT=""
 NO_SUMMARY=""
 MODEL="${ANTHROPIC_MODEL:-claude-sonnet-5}"
-REPO="${GITHUB_REPOSITORY:-golobitch/tb-explorer}"
+REPO="${GITHUB_REPOSITORY:-golobitch/keber}"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -50,17 +50,17 @@ EPOCH=608c2777d3bf8be8b71be6c0666df61863ff6a5e
 
 case "$TAG" in
   cli-v*)
-    NAME="tb-tui"
+    NAME="keber"
     PREFIX="cli-v"
     # What the terminal UI is: its source, the client it is built against, and the two files that
     # decide how it reaches people.
-    PATHS="cli Vendor Makefile packaging/homebrew/tb-tui.rb.tmpl scripts/build-apt-repo.sh"
+    PATHS="cli Vendor Makefile packaging/homebrew/keber.formula.rb.tmpl scripts/build-apt-repo.sh"
     LEGACY_PATHS=""   # There was no terminal UI before the split.
     ;;
   ui-v*)
-    NAME="TigerBeetle Explorer"
+    NAME="Keber"
     PREFIX="ui-v"
-    PATHS="ui Vendor Makefile packaging/homebrew/tb-explorer.rb.tmpl"
+    PATHS="ui Vendor Makefile packaging/homebrew/keber.cask.rb.tmpl scripts/icon.svg"
     LEGACY_PATHS="Sources Tests Tools project.yml Vendor Makefile"
     ;;
   *)

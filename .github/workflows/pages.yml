@@ -1,7 +1,7 @@
 name: pages
 
 # Builds the landing page in website/ and publishes it to
-# https://golobitch.github.io/tb-explorer/.
+# https://golobitch.github.io/keber/.
 on:
   push:
     branches: [main]
@@ -43,7 +43,7 @@ jobs:
         run: npm run build
 
       # The apt repository is assembled from the newest cli release and published beside the site,
-      # so `apt install tb-tui` upgrades. Nothing is committed: the packages are fetched here.
+      # so `apt install keber` upgrades. Nothing is committed: the packages are fetched here.
       # Skipped when the signing key is missing, because an unsigned repository is worse than none.
       - name: Build the apt repository
         if: ${{ env.APT_GPG_PRIVATE_KEY != '' }}

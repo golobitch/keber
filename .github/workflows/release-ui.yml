@@ -48,7 +48,7 @@ jobs:
 
       - name: Check app version
         run: |
-          PLIST="build/DerivedData/Build/Products/Release/TigerBeetle Explorer.app/Contents/Info.plist"
+          PLIST="build/DerivedData/Build/Products/Release/Keber.app/Contents/Info.plist"
           ACTUAL=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$PLIST")
           BUILD=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")
           echo "Built version $ACTUAL ($BUILD)"
@@ -70,7 +70,7 @@ jobs:
           APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
         run: |
           set -euo pipefail
-          APP="build/DerivedData/Build/Products/Release/TigerBeetle Explorer.app"
+          APP="build/DerivedData/Build/Products/Release/Keber.app"
           KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
           KEYCHAIN_PASSWORD="$(uuidgen)"
           cleanup() { security delete-keychain "$KEYCHAIN" 2>/dev/null || true; rm -f "$RUNNER_TEMP/cert.p12" notarize.zip; }
@@ -116,8 +116,8 @@ jobs:
 
       - name: Package
         run: |
-          ditto -c -k --keepParent "build/DerivedData/Build/Products/Release/TigerBeetle Explorer.app" TigerBeetle-Explorer-macos-universal.zip
-          shasum -a 256 TigerBeetle-Explorer-macos-universal.zip > SHA256SUMS
+          ditto -c -k --keepParent "build/DerivedData/Build/Products/Release/Keber.app" Keber-macos-universal.zip
+          shasum -a 256 Keber-macos-universal.zip > SHA256SUMS
 
       # The notes are generated rather than left to GitHub: it picks the previous release by date
       # rather than by tag prefix, so this one would baseline against whichever terminal UI release
@@ -130,9 +130,9 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: TigerBeetle Explorer ${{ steps.version.outputs.version }}
+          name: Keber ${{ steps.version.outputs.version }}
           files: |
-            TigerBeetle-Explorer-macos-universal.zip
+            Keber-macos-universal.zip
             SHA256SUMS
           body_path: release-notes.md
           # The website's download button follows /releases/latest, so the app keeps the badge.
