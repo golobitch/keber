@@ -67,7 +67,7 @@ you are working on. `make tb-stop` stops it; `make tb-reset` throws the data awa
 ```
 Makefile              one entry point for both front ends and the shared dev cluster
 Vendor/tigerbeetle/   tb_client.h, module map, the static libraries, VERSION
-scripts/              dev-cluster.sh, render-icon.swift, build-apt-repo.sh
+scripts/              dev-cluster.sh, icon.svg (the app icon), build-apt-repo.sh
 packaging/homebrew/   the formula and cask templates the tap is rendered from
 docs/RELEASING.md     what to bump, what to tag, and what happens next
 docs/images/          screenshots used by the READMEs

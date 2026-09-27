@@ -10,9 +10,10 @@ XCB          := xcodebuild -project ui/TBExplorer.xcodeproj -derivedDataPath $(D
 
 ICONSET := ui/Sources/TBExplorer/Assets.xcassets/AppIcon.appiconset
 
-# Render the app icon at 1024px and derive every size the asset catalog needs.
+# Render the app icon from scripts/icon.svg at 1024px and derive every size the asset catalog
+# needs. rsvg-convert comes from librsvg: `brew install librsvg`.
 icon:
-	swift scripts/render-icon.swift $(ICONSET)/icon_1024.png
+	rsvg-convert -w 1024 -h 1024 scripts/icon.svg -o $(ICONSET)/icon_1024.png
 	for s in 16 32 64 128 256 512; do sips -z $$s $$s $(ICONSET)/icon_1024.png --out $(ICONSET)/icon_$$s.png >/dev/null; done
 
 generate:
