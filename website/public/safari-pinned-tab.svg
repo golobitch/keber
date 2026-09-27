@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="720" viewBox="152 164 720 720">
+  <!-- Safari pinned tab: one colour, black on transparent. -->
+  <defs><clipPath id="melytra"><path d="M 362 446 C 350 446 344 458 344 476 C 344 604 362 724 432 784 C 462 808 490 814 512 814 C 534 814 562 808 592 784 C 662 724 680 604 680 476 C 680 458 674 446 662 446 Z"/></clipPath>
+    <mask id="mcarve" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+      <rect width="1024" height="1024" fill="#fff"/>
+      <line x1="512" y1="440" x2="512" y2="820" stroke="#000" stroke-width="16"/>
+      <path d="M 440 336 C 470 327 554 327 584 336 C 622 347 650 382 656 430 C 658 447 649 456 636 456 L 388 456 C 375 456 366 447 368 430 C 374 382 402 347 440 336 Z" fill="none" stroke="#000" stroke-width="14"/>
+      <circle cx="478" cy="304" r="11" fill="#000"/>
+      <circle cx="546" cy="304" r="11" fill="#000"/>
+    </mask></defs>
+  <g mask="url(#mcarve)" fill="#000">
+    <g fill="none" stroke="#000" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"><polyline points="392,412 330,372 292,292"/><polyline points="632,412 694,372 732,292"/><polyline points="368,548 284,528 238,590"/><polyline points="656,548 740,528 786,590"/><polyline points="404,706 322,764 300,858"/><polyline points="620,706 702,764 724,858"/><path d="M 494 298 Q 472 266 446 238"/><path d="M 530 298 Q 552 266 578 238"/></g>
+    <g stroke="#000" stroke-width="15" stroke-linecap="round"><line x1="446" y1="238" x2="400.9" y2="221.6"/><line x1="446" y1="238" x2="409.2" y2="207.1"/><line x1="446" y1="238" x2="422.0" y2="196.4"/><line x1="446" y1="238" x2="437.7" y2="190.7"/><line x1="578" y1="238" x2="586.3" y2="190.7"/><line x1="578" y1="238" x2="602.0" y2="196.4"/><line x1="578" y1="238" x2="614.8" y2="207.1"/><line x1="578" y1="238" x2="623.1" y2="221.6"/></g>
+    <path d="M 484 792 Q 512 884 540 792 Z"/>
+    <path d="M 362 446 C 350 446 344 458 344 476 C 344 604 362 724 432 784 C 462 808 490 814 512 814 C 534 814 562 808 592 784 C 662 724 680 604 680 476 C 680 458 674 446 662 446 Z"/>
+    <ellipse cx="512" cy="318" rx="60" ry="42"/>
+    <path d="M 440 336 C 470 327 554 327 584 336 C 622 347 650 382 656 430 C 658 447 649 456 636 456 L 388 456 C 375 456 366 447 368 430 C 374 382 402 347 440 336 Z"/>
+  </g>
+</svg>

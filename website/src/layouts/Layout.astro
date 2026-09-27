@@ -33,10 +33,13 @@ const ogImage = absolute(withBase("og-image.png"));
     <meta name="theme-color" content="#FAF7F0" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#15181E" media="(prefers-color-scheme: dark)" />
 
-    <link rel="icon" type="image/png" sizes="32x32" href={withBase("favicon-32x32.png")} />
-    <link rel="icon" type="image/png" sizes="16x16" href={withBase("favicon-16x16.png")} />
-    <link rel="icon" type="image/png" sizes="192x192" href={withBase("icon-192.png")} />
-    <link rel="apple-touch-icon" sizes="180x180" href={withBase("apple-touch-icon.png")} />
+    <!-- favicon.svg follows the browser's light or dark scheme; favicon.ico is for everything that
+         ignores SVG. The manifest carries the 192/512 and maskable icons for installs. -->
+    <link rel="icon" href={withBase("favicon.ico")} sizes="32x32" />
+    <link rel="icon" href={withBase("favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase("apple-touch-icon.png")} />
+    <link rel="mask-icon" href={withBase("safari-pinned-tab.svg")} color="#E86F28" />
+    <link rel="manifest" href={withBase("site.webmanifest")} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />

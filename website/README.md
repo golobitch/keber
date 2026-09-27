@@ -44,3 +44,9 @@ Page copy should stay in line with the app's [README](https://github.com/golobit
 ## Credits
 
 Based on the [AgenceX Astro theme](https://github.com/uno-forge-hub/agency-landing-page-Astrojs) by John Kat, used under the MIT License. See [LICENCE.md](LICENCE.md).
+
+## Icons
+
+`public/favicon.svg` and `public/safari-pinned-tab.svg` are the web versions of the app icon in
+`scripts/icon.svg`; the PNGs, `favicon.ico` and the maskable icons are rendered from them. The
+manifest's paths are relative, so it works under `/keber/` and at a domain root alike.

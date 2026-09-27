@@ -1,0 +1,33 @@
+{
+  "name": "Keber",
+  "short_name": "Keber",
+  "description": "A read-only explorer for TigerBeetle clusters: a native macOS app and a terminal UI.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F4EFE6",
+  "theme_color": "#F4EFE6",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 1024 1024">
+  <!-- Keber favicon: follows the browser's light or dark scheme. -->
+  <style>
+    .tile { fill: #F4EFE6; }
+    .ink { fill: #252A33; }
+    .inkline { stroke: #252A33; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #1F232A; }
+      .ink { fill: #B9C1CD; }
+      .inkline { stroke: #B9C1CD; }
+    }
+  </style>
+  <defs><linearGradient id="debit" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#FFA35F"/><stop offset="1" stop-color="#E86F28"/></linearGradient>
+    <linearGradient id="credit" x1="1" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#52E6D2"/><stop offset="1" stop-color="#1CAF9D"/></linearGradient>
+    <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A414D"/><stop offset="1" stop-color="#252A33"/></linearGradient>
+    <clipPath id="elytra"><path d="M 362 446 C 350 446 344 458 344 476 C 344 604 362 724 432 784 C 462 808 490 814 512 814 C 534 814 562 808 592 784 C 662 724 680 604 680 476 C 680 458 674 446 662 446 Z"/></clipPath></defs>
+  <rect class="tile" width="1024" height="1024" rx="224"/>
+  <g transform="translate(512 512) scale(1.3) translate(-512 -524)"><g>
+    <g fill="none" class="inkline" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"><polyline points="392,412 330,372 292,292"/><polyline points="632,412 694,372 732,292"/><polyline points="368,548 284,528 238,590"/><polyline points="656,548 740,528 786,590"/><polyline points="404,706 322,764 300,858"/><polyline points="620,706 702,764 724,858"/><path d="M 494 298 Q 472 266 446 238"/><path d="M 530 298 Q 552 266 578 238"/></g>
+    <g class="inkline" stroke-width="14" stroke-linecap="round"><line x1="446" y1="238" x2="400.9" y2="221.6"/><line x1="446" y1="238" x2="409.2" y2="207.1"/><line x1="446" y1="238" x2="422.0" y2="196.4"/><line x1="446" y1="238" x2="437.7" y2="190.7"/><line x1="578" y1="238" x2="586.3" y2="190.7"/><line x1="578" y1="238" x2="602.0" y2="196.4"/><line x1="578" y1="238" x2="614.8" y2="207.1"/><line x1="578" y1="238" x2="623.1" y2="221.6"/></g>
+    <path d="M 484 792 Q 512 884 540 792 Z" class="ink"/>
+    <g clip-path="url(#elytra)">
+      <rect x="330" y="440" width="182" height="380" fill="url(#debit)"/>
+      <rect x="512" y="440" width="182" height="380" fill="url(#credit)"/>
+      <g stroke="#FFFFFF" stroke-opacity="0.30" stroke-width="6"><line x1="330" y1="548" x2="694" y2="548"/><line x1="330" y1="622" x2="694" y2="622"/><line x1="330" y1="696" x2="694" y2="696"/><line x1="330" y1="764" x2="694" y2="764"/></g>
+      <ellipse cx="420" cy="540" rx="46" ry="92" fill="#FFFFFF" opacity="0.16"/>
+      <ellipse cx="604" cy="540" rx="46" ry="92" fill="#FFFFFF" opacity="0.16"/>
+    </g>
+    <line x1="512" y1="452" x2="512" y2="814" class="inkline" stroke-width="10"/>
+    <ellipse cx="512" cy="318" rx="60" ry="42" class="ink"/>
+    <path d="M 440 336 C 470 327 554 327 584 336 C 622 347 650 382 656 430 C 658 447 649 456 636 456 L 388 456 C 375 456 366 447 368 430 C 374 382 402 347 440 336 Z" class="ink"/>
+    <path d="M 492 454 L 532 454 L 512 494 Z" class="ink"/>
+    <ellipse cx="512" cy="372" rx="92" ry="18" fill="#FFFFFF" opacity="0.10"/>
+    <circle cx="478" cy="304" r="9" fill="#6A7282"/>
+    <circle cx="546" cy="304" r="9" fill="#6A7282"/>
+  </g></g>
+</svg>
