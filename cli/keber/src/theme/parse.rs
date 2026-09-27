@@ -2,7 +2,7 @@
 //!
 //! One role per line, `role = fg [on bg] [modifiers]`, which is the whole grammar. It is parsed by
 //! hand because the alternative is a serialisation stack for a file that is a list of pairs, and
-//! tb-tui's dependency list is two crates deep on purpose.
+//! keber's dependency list is two crates deep on purpose.
 //!
 //! A file only has to name the roles it changes: parsing starts from a palette and overwrites what
 //! the file mentions, so two lines is a valid theme.

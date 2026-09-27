@@ -1,6 +1,6 @@
 //! The themes compiled into the binary.
 //!
-//! Each one is a real theme file under `cli/tb-tui/themes/`, parsed at startup by the same parser
+//! Each one is a real theme file under `cli/keber/themes/`, parsed at startup by the same parser
 //! a hand-written theme goes through. So a preset is also a worked example of the format, and a
 //! preset with a typo in it fails the test suite rather than someone's terminal.
 

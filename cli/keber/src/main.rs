@@ -100,7 +100,7 @@ fn parse_options() -> Result<Options, String> {
 
 /// `--help` is the only documentation someone has in the moment, so it names every flag.
 const HELP: &str = "\
-tb-tui — a read-only terminal browser for TigerBeetle
+keber — a read-only terminal browser for TigerBeetle
 
   -a, --addresses <list>   replica addresses (default 127.0.0.1:3000)
   -c, --cluster <id>       cluster id (default 0)
@@ -117,7 +117,7 @@ tb-tui — a read-only terminal browser for TigerBeetle
 /// turn colour back on.
 ///
 /// Everything else is a preference, and preferences have an order: the flag, then the environment,
-/// then the config file, then the palette tb-tui ships with. The `Err` case is only for a theme
+/// then the config file, then the palette keber ships with. The `Err` case is only for a theme
 /// the user named on the command line — a broken config file is reported, not obeyed, because a
 /// bad preference should never stand between you and a cluster.
 fn resolve_theme(
@@ -131,6 +131,8 @@ fn resolve_theme(
     if let Some(spec) = options
         .theme
         .clone()
+        .or_else(|| std::env::var("KEBER_THEME").ok())
+        // The name it had before the rename, so a shell profile that sets it keeps working.
         .or_else(|| std::env::var("TB_TUI_THEME").ok())
     {
         return Ok((Theme::from_palette(theme::resolve(&spec, config)?), None));
@@ -150,7 +152,7 @@ fn main() {
     let options = match parse_options() {
         Ok(options) => options,
         Err(message) => {
-            eprintln!("tb-tui: {message}");
+            eprintln!("keber: {message}");
             std::process::exit(2);
         }
     };
@@ -175,7 +177,7 @@ fn main() {
     let (theme, complaint) = match resolve_theme(&options, config.as_deref()) {
         Ok(resolved) => resolved,
         Err(message) => {
-            eprintln!("tb-tui: {message}");
+            eprintln!("keber: {message}");
             std::process::exit(2);
         }
     };
@@ -185,7 +187,7 @@ fn main() {
             Some(name) => match theme::resolve(name, config.as_deref()) {
                 Ok(palette) => palette,
                 Err(message) => {
-                    eprintln!("tb-tui: {message}");
+                    eprintln!("keber: {message}");
                     std::process::exit(2);
                 }
             },
@@ -198,7 +200,7 @@ fn main() {
     let client = match Client::connect(options.cluster_id, &options.addresses) {
         Ok(client) => Arc::new(client),
         Err(error) => {
-            eprintln!("tb-tui: {error}");
+            eprintln!("keber: {error}");
             std::process::exit(1);
         }
     };
@@ -220,7 +222,7 @@ fn main() {
     ratatui::restore();
 
     if let Err(error) = outcome {
-        eprintln!("tb-tui: {error}");
+        eprintln!("keber: {error}");
         std::process::exit(1);
     }
 }

@@ -1,5 +1,5 @@
 [package]
-name = "tb-tui"
+name = "keber"
 description = "Read-only terminal browser for TigerBeetle clusters"
 version.workspace = true
 edition.workspace = true
@@ -21,9 +21,14 @@ no create path and cannot change a cluster."""
 section = "utils"
 priority = "optional"
 depends = "$auto"
+# The package was called tb-tui before the rename. Installing keber takes its place rather than
+# failing on the files the two would otherwise share.
+conflicts = "tb-tui"
+replaces = "tb-tui"
+provides = "tb-tui"
 assets = [
-    ["../target/release/tb-tui", "usr/bin/", "755"],
-    ["../README.md", "usr/share/doc/tb-tui/README.md", "644"],
+    ["../target/release/keber", "usr/bin/", "755"],
+    ["../README.md", "usr/share/doc/keber/README.md", "644"],
 ]
 
 [dependencies]

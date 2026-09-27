@@ -15,7 +15,7 @@ use ratatui::style::{Color, Modifier, Style};
 pub use role::{Palette, Role};
 
 /// Every theme that can be selected by name: the presets, plus whatever the user has put in
-/// `~/.config/tb-tui/themes/`. A user theme with a preset's name appears once, and shadows it.
+/// `~/.config/keber/themes/`. A user theme with a preset's name appears once, and shadows it.
 pub fn available(config: Option<&std::path::Path>) -> Vec<String> {
     let mut names: Vec<String> = preset::ALL
         .iter()
@@ -201,7 +201,7 @@ impl Theme {
     }
 }
 
-/// The colours tb-tui has always shipped with, now spelled as roles.
+/// The colours keber has always shipped with, now spelled as roles.
 pub fn default_palette() -> Palette {
     let dim = Style::new().fg(Color::DarkGray);
     let mut palette = Palette::blank();

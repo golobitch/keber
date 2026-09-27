@@ -129,7 +129,7 @@ pub struct App {
     pub newest_first: bool,
     pub theme: Theme,
     /// Where a kept theme is written. Held here rather than read from the environment where it is
-    /// used, so a test can point it somewhere harmless — and so the one path tb-tui writes to is
+    /// used, so a test can point it somewhere harmless — and so the one path keber writes to is
     /// visible in the state rather than buried in a method.
     pub config: Option<std::path::PathBuf>,
     /// Open while `:theme` is choosing one.
@@ -662,7 +662,7 @@ impl App {
         }
     }
 
-    /// Writing the config is the one thing tb-tui does to your disk, and a failure to do it is
+    /// Writing the config is the one thing keber does to your disk, and a failure to do it is
     /// worth a line in the footer rather than a crash: the theme is already on screen.
     fn remember_theme(&mut self, name: &str) {
         let Some(directory) = self.config.clone() else {

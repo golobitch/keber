@@ -1,13 +1,13 @@
 [workspace]
 resolver = "3"
-members = ["tbclient", "tb-tui"]
+members = ["tbclient", "keber"]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
 license = "MIT"
-repository = "https://github.com/golobitch/tb-explorer"
+repository = "https://github.com/golobitch/keber"
 
 [workspace.dependencies]
 tbclient = { path = "tbclient" }

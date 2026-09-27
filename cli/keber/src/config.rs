@@ -1,8 +1,8 @@
-//! `~/.config/tb-tui/config` — the only file tb-tui writes, and it writes one key.
+//! `~/.config/keber/config` — the only file keber writes, and it writes one key.
 //!
 //! The same `key = value` shape as a theme file, because two formats for two small files is one
 //! format too many. Keys this version does not know are kept on rewrite rather than dropped: a
-//! newer tb-tui's settings should survive an older one being run once.
+//! newer keber's settings should survive an older one being run once.
 //!
 //! Everything here takes the directory as an argument. The environment is read in exactly one
 //! place, [`directory`], which keeps the rest testable without setting environment variables —
@@ -10,7 +10,7 @@
 
 use std::path::{Path, PathBuf};
 
-/// `$XDG_CONFIG_HOME/tb-tui`, else `~/.config/tb-tui` — on macOS too. The macOS app's Application
+/// `$XDG_CONFIG_HOME/keber`, else `~/.config/keber` — on macOS too. The macOS app's Application
 /// Support convention does not travel to the Linux builds this binary also ships for, and a
 /// terminal tool living in `~/.config` is what everything else in the terminal does.
 pub fn directory() -> Option<PathBuf> {
@@ -18,7 +18,20 @@ pub fn directory() -> Option<PathBuf> {
         Some(xdg) if !xdg.is_empty() => PathBuf::from(xdg),
         _ => PathBuf::from(std::env::var_os("HOME")?).join(".config"),
     };
-    Some(base.join("tb-tui"))
+    Some(within(&base))
+}
+
+/// Which directory under `base` holds the config. Before the rename the binary was `tb-tui`, and
+/// someone who kept a theme then has it in `tb-tui/`: that directory goes on being used until a
+/// `keber/` one exists, so the upgrade neither loses the theme nor copies anything behind their back.
+fn within(base: &Path) -> PathBuf {
+    let current = base.join("keber");
+    let legacy = base.join("tb-tui");
+    if !current.exists() && legacy.is_dir() {
+        legacy
+    } else {
+        current
+    }
 }
 
 fn file(directory: &Path) -> PathBuf {
@@ -37,7 +50,7 @@ pub fn theme(directory: &Path) -> Option<String> {
         .filter(|value| !value.is_empty())
 }
 
-/// A theme file the user put in `~/.config/tb-tui/themes/`, which shadows a preset of the same
+/// A theme file the user put in `~/.config/keber/themes/`, which shadows a preset of the same
 /// name — otherwise a preset could never be adjusted without renaming it.
 pub fn user_theme(directory: &Path, name: &str) -> Option<PathBuf> {
     let path = directory.join("themes").join(format!("{name}.theme"));
@@ -86,7 +99,7 @@ mod tests {
 
     impl Scratch {
         fn new(name: &str) -> Self {
-            let path = std::env::temp_dir().join(format!("tb-tui-{name}-{}", std::process::id()));
+            let path = std::env::temp_dir().join(format!("keber-{name}-{}", std::process::id()));
             let _ = std::fs::remove_dir_all(&path);
             std::fs::create_dir_all(&path).unwrap();
             Self(path)
@@ -150,6 +163,29 @@ mod tests {
             1,
             "left two theme lines:\n{written}"
         );
+    }
+
+    #[test]
+    fn a_fresh_install_uses_the_keber_directory() {
+        let scratch = Scratch::new("fresh-base");
+        assert_eq!(within(&scratch.0), scratch.0.join("keber"));
+    }
+
+    #[test]
+    fn a_config_from_before_the_rename_keeps_being_used() {
+        let scratch = Scratch::new("legacy-base");
+        scratch.write("tb-tui/config", "theme = nord\n");
+        let directory = within(&scratch.0);
+        assert_eq!(directory, scratch.0.join("tb-tui"));
+        assert_eq!(theme(&directory).as_deref(), Some("nord"));
+    }
+
+    #[test]
+    fn the_keber_directory_wins_once_it_exists() {
+        let scratch = Scratch::new("both-bases");
+        scratch.write("tb-tui/config", "theme = nord\n");
+        scratch.write("keber/config", "theme = dracula\n");
+        assert_eq!(within(&scratch.0), scratch.0.join("keber"));
     }
 
     #[test]

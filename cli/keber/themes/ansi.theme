@@ -1,4 +1,4 @@
-# ansi — what tb-tui ships with
+# ansi — what keber ships with
 #
 # Named ANSI colours, so the UI inherits whatever scheme your terminal already uses and stays
 # readable on a light background. The presets that name hex colours cannot do that, which is why

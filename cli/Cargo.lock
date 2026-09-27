@@ -534,6 +534,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "keber"
+version = "0.1.0"
+dependencies = [
+ "crossterm",
+ "ratatui",
+ "tbclient",
+]
+
+[[package]]
 name = "lab"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1276,15 +1285,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "tb-tui"
-version = "0.1.0"
-dependencies = [
- "crossterm",
- "ratatui",
- "tbclient",
 ]
 
 [[package]]

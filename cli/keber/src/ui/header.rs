@@ -56,7 +56,7 @@ pub fn draw(frame: &mut Frame, area: Rect, app: &App, compact: bool) {
 fn one_line(app: &App) -> Paragraph<'_> {
     let theme = &app.theme;
     Paragraph::new(Line::from(vec![
-        Span::styled("tb-tui ", theme.logo),
+        Span::styled("keber ", theme.logo),
         Span::styled(
             format!("cluster {} · {} ", app.cluster_id, app.addresses),
             theme.hint,

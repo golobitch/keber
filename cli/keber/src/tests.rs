@@ -61,7 +61,7 @@ fn render(app: &App, width: u16, height: u16) -> String {
 fn the_header_says_what_it_is_connected_to_and_that_it_cannot_write() {
     let app = app();
     let screen = render(&app, 120, 10);
-    assert!(screen.contains("tb-tui"), "{screen}");
+    assert!(screen.contains("keber"), "{screen}");
     assert!(screen.contains("cluster 0"), "{screen}");
     assert!(screen.contains("127.0.0.1:3000"), "{screen}");
     assert!(screen.contains("READ-ONLY"), "{screen}");
@@ -809,7 +809,7 @@ mod themes {
     impl Scratch {
         fn new(name: &str) -> Self {
             let path =
-                std::env::temp_dir().join(format!("tb-tui-app-{name}-{}", std::process::id()));
+                std::env::temp_dir().join(format!("keber-app-{name}-{}", std::process::id()));
             let _ = std::fs::remove_dir_all(&path);
             std::fs::create_dir_all(&path).unwrap();
             Self(path)
