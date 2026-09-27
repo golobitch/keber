@@ -5,7 +5,7 @@
 Read-only browsers for [TigerBeetle](https://tigerbeetle.com) clusters: ledgers, accounts,
 transfers, balance history, and pending → post/void chains.
 
-**Website:** [golobitch.github.io/keber](https://golobitch.github.io/keber/)
+**Website:** [keber.io](https://keber.io)
 
 **Why Keber?** *Keber* is Slovenian for the cockchafer, the May beetle. This is a small beetle for
 looking inside a big one, made in Ljubljana, and its icon is a keber whose wing cases are a

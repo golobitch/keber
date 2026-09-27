@@ -24,12 +24,12 @@ else:
 
 ```sh
 sudo install -d /usr/share/keyrings
-curl -fsSL https://golobitch.github.io/keber/apt/golobitch-archive-keyring.asc \
+curl -fsSL https://keber.io/apt/golobitch-archive-keyring.asc \
   | sudo gpg --dearmor -o /usr/share/keyrings/golobitch-archive-keyring.gpg
 
 sudo tee /etc/apt/sources.list.d/keber.sources >/dev/null <<'EOF'
 Types: deb
-URIs: https://golobitch.github.io/keber/apt
+URIs: https://keber.io/apt
 Suites: stable
 Components: main
 Architectures: amd64 arm64
