@@ -1,0 +1,12 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // www.keber.io answers every request with a permanent redirect to the same path on keber.io.
+  // A separate Worker because the site's own Worker is assets-only: a request that matches a file
+  // is served before any script runs, so it could never redirect www on its own.
+  "name": "keber-www",
+  "main": "index.js",
+  "compatibility_date": "2026-09-26",
+  "routes": [{ "pattern": "www.keber.io", "custom_domain": true }],
+  "workers_dev": false,
+  "preview_urls": false
+}

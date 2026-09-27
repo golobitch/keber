@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // keber.io: the Astro build in dist/, served by Cloudflare as static assets. There is no Worker
+  // script, so every request is a file, and static asset requests are free. CI adds the signed apt
+  // repository to dist/apt before it deploys; a deploy made without it would take /apt offline.
+  "name": "keber",
+  "compatibility_date": "2026-09-26",
+  "assets": {
+    "directory": "./dist"
+  },
+  // Creates the DNS record and the certificate for keber.io. The zone has to be on Cloudflare,
+  // in the account the API token belongs to.
+  "routes": [{ "pattern": "keber.io", "custom_domain": true }],
+  // Production lives on keber.io only; pull requests get their own URLs on workers.dev.
+  "workers_dev": false,
+  "preview_urls": true
+}

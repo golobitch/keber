@@ -1,0 +1,9 @@
+# Cloudflare reads this file from the deployed assets.
+
+# Astro fingerprints everything under /_astro/, so a file there never changes under its name.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# apt checks for new releases here; a cached Release file would hide one.
+/apt/*
+  Cache-Control: no-cache
