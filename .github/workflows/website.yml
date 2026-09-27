@@ -1,0 +1,160 @@
+name: website
+
+# Builds the landing page in website/ and serves it from Cloudflare at https://keber.io, with the
+# signed apt repository under /apt. A push to main deploys; a pull request gets its own preview URL
+# on workers.dev and never touches keber.io. The Cloudflare side is in website/wrangler.jsonc.
+on:
+  push:
+    branches: [main]
+    paths:
+      - website/**
+      - .github/workflows/website.yml
+  pull_request:
+    paths:
+      - website/**
+      - .github/workflows/website.yml
+  # release-cli.yml dispatches this after a cli release, so the apt repository picks it up.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # One production deploy at a time, never cancelled halfway; a newer push to a pull request
+  # replaces its older preview.
+  group: website-${{ github.event.pull_request.number || 'production' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # A step's own env is not visible to its `if`, so expose the secrets' presence at workflow level.
+  APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+  CLOUDFLARE_TOKEN_SET: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    environment:
+      name: production
+      url: https://keber.io
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # The apt repository is assembled from the newest cli release and published beside the site,
+      # so `apt install keber` upgrades. Nothing is committed: the packages are fetched here.
+      # Skipped when the signing key is missing, because an unsigned repository is worse than none.
+      - name: Build the apt repository
+        if: ${{ env.APT_GPG_PRIVATE_KEY != '' }}
+        # The site is what this workflow is for. A signing key that will not import is worth a
+        # visible failure on the step, but not a website that stops deploying until it is fixed.
+        continue-on-error: true
+        working-directory: ${{ github.workspace }}
+        env:
+          APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+          APT_GPG_KEY_ID: ${{ secrets.APT_GPG_KEY_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq dpkg-dev apt-utils
+          printf '%s' "$APT_GPG_PRIVATE_KEY" | gpg --batch --import
+          OUT=website/dist/apt scripts/build-apt-repo.sh
+
+      # Unlike the apt repository, the deploy is the point of this job: without the token there is
+      # nothing to do, and a green run that published nothing would hide that.
+      - name: Deploy keber.io and the www redirect
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ "$CLOUDFLARE_TOKEN_SET" != "true" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not set; see website/README.md#deploying"
+            exit 1
+          fi
+          npx wrangler deploy --message "${GITHUB_SHA::7}"
+          npx wrangler deploy --config www-redirect/wrangler.jsonc --message "${GITHUB_SHA::7}"
+
+  preview:
+    # Secrets are not given to pull requests from forks, so those get no preview.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Uploads a version of the keber Worker without deploying it, so keber.io keeps serving main.
+      # The alias gives the pull request one URL that follows its latest push. There is no apt
+      # repository in a preview: the signing key stays with production.
+      - name: Upload a preview version
+        id: upload
+        if: env.CLOUDFLARE_TOKEN_SET == 'true'
+        # A preview is a convenience. The Worker has to exist before a version can be uploaded to
+        # it, so this fails until main has deployed once, and that should not fail the pull request.
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -o pipefail
+          npx wrangler versions upload --preview-alias "pr-$PR" --message "PR #$PR at ${HEAD_SHA::7}" | tee upload.log
+          # Prefer the alias URL, which stays the same across pushes; fall back to this version's.
+          URL="$(grep -oE "https://pr-$PR-[a-z0-9.-]+\.workers\.dev" upload.log | head -1)"
+          [ -n "$URL" ] || URL="$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' upload.log | head -1)"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Comment the preview URL
+        if: steps.upload.outputs.url != ''
+        uses: actions/github-script@v7
+        env:
+          URL: ${{ steps.upload.outputs.url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          # One comment per pull request, edited on each push rather than a new one every time.
+          script: |
+            const marker = '<!-- keber-website-preview -->';
+            const body = `${marker}\n**Website preview:** ${process.env.URL}\n\nBuilt from ${process.env.HEAD_SHA.slice(0, 7)}. No \`/apt\` here; that is production only.`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const mine = comments.find(c => c.user.type === 'Bot' && c.body.includes(marker));
+            if (mine) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }

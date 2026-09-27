@@ -5,11 +5,11 @@ on:
     branches: [main]
     paths-ignore:
       - website/**
-      - .github/workflows/pages.yml
+      - .github/workflows/website.yml
   pull_request:
     paths-ignore:
       - website/**
-      - .github/workflows/pages.yml
+      - .github/workflows/website.yml
 
 env:
   TB_VERSION: 0.17.9

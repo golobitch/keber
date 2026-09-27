@@ -211,7 +211,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'pages.yml',
+              workflow_id: 'website.yml',
               ref: context.payload.repository.default_branch,
             })
 
