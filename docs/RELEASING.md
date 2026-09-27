@@ -7,7 +7,7 @@ their own tags, so releasing one never rebuilds the other.
 | --- | --- | --- | --- |
 | macOS app | `ui/project.yml` (`MARKETING_VERSION`) | `ui-v0.1.0` | `release-ui.yml` |
 | Terminal UI | `cli/Cargo.toml` (`[workspace.package] version`) | `cli-v0.1.0` | `release-cli.yml` |
-| Website | — | — | `pages.yml`, on push to `website/**` |
+| Website | — | — | `website.yml`, on push to `website/**` |
 
 Tags use a dash, not a slash: `cli/v0.1.0` would collide with a branch named `cli`, and several
 tools refuse to parse it.
@@ -87,8 +87,10 @@ it is a text box, and the assets do not care.
 
 ## One-time setup
 
-Four secrets and one repository, none of which exist until someone makes them. Every workflow
-that needs one degrades rather than failing loudly in the wrong place.
+Six secrets and one repository, none of which exist until someone makes them. Every workflow
+that needs one degrades rather than failing loudly in the wrong place — except the website
+deploy, which fails without its token, because publishing nothing is the one thing it must not
+do quietly.
 
 **`golobitch/homebrew-tap`** — a public repository named exactly that (the `homebrew-` prefix is
 what makes `golobitch/tap` resolve). `bump-tap.yml` writes `Formula/keber.rb`,
@@ -107,13 +109,18 @@ gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}'   # APT
 gpg --armor --export-secret-keys "$KEY_ID"                                 # APT_GPG_PRIVATE_KEY
 ```
 
+**`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`** — for `website.yml`, which deploys
+keber.io and its apt repository with wrangler. The token comes from Cloudflare's *Edit Cloudflare
+Workers* template, limited to this account and the `keber.io` zone. See
+[`website/README.md`](../website/README.md#deploying).
+
 **`ANTHROPIC_API_KEY`** — optional, and the only one that costs money: one Messages API call per
 release, cents at a time. Without it the notes publish with no opening paragraph and a line in the
 job log saying why. It is reachable only from tag pushes on this repository, never from a fork's
 pull request. `ANTHROPIC_MODEL` overrides the model, which defaults to `claude-sonnet-5`.
 
 **Back the private key up somewhere outside CI.** Losing it means every existing user's `apt
-update` fails until they install a new key by hand. Without the secret, `pages.yml` skips the apt
+update` fails until they install a new key by hand. Without the secret, `website.yml` skips the apt
 repository and publishes the site alone — an unsigned repository is never published, because
 teaching users to pass `[trusted=yes]` is worse than offering no repository at all.
 
@@ -135,5 +142,5 @@ A tag is cheap; a wrong release is not. If a release publishes something broken:
 1. Delete the release and the tag (`gh release delete cli-v0.1.0 --cleanup-tag`).
 2. Fix, bump to the next patch version, tag again. Never move a tag that has been pushed —
    Homebrew and apt have already recorded checksums against it.
-3. If the tap or apt repository already updated, re-run `bump-tap.yml` and `pages.yml` for the
+3. If the tap or apt repository already updated, re-run `bump-tap.yml` and `website.yml` for the
    previous good tag to roll them back.

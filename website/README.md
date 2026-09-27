@@ -25,17 +25,41 @@ Links to public files and pages go through `withBase()` in `src/lib/url.ts`, so 
 
 ## Deploying
 
-The site lives in the `website/` folder of the [keber](https://github.com/golobitch/keber) repo. The `pages` workflow there builds it and deploys `dist/` to GitHub Pages on every push to `main` that touches `website/`. It can also be run by hand from the Actions tab.
+The site is served from Cloudflare at `https://keber.io`: a Worker with static assets and no
+script, configured in [`wrangler.jsonc`](wrangler.jsonc). The `website` workflow in
+`.github/workflows/website.yml` builds it, adds the signed apt repository under `dist/apt`, and
+runs `wrangler deploy` on every push to `main` that touches `website/`. It can also be run by hand
+from the Actions tab, and a cli release dispatches it so the apt repository picks up the new
+packages.
 
-GitHub Pages serves it at `keber.io`. The domain is set in the repository's **Settings → Pages → Custom domain**; a CNAME file in `public/` would do nothing, because deploys made by a workflow ignore it. DNS for the apex points at GitHub Pages:
+`www.keber.io` is a second Worker, [`www-redirect/`](www-redirect), that answers every request
+with a 301 to the same path on `keber.io`. The site's Worker cannot do it itself: a request that
+matches a file is served before any script would run.
 
-| Type | Name | Value |
-| --- | --- | --- |
-| A | `@` | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153` |
-| CNAME | `www` | `golobitch.github.io` |
+A pull request that touches `website/` gets a preview instead of a deploy: the workflow uploads a
+version of the Worker under the alias `pr-<number>` and comments its `workers.dev` URL on the pull
+request. `keber.io` keeps serving `main`. Previews have no `/apt`, and pull requests from forks get
+none, because they get no secrets.
 
-The old `golobitch.github.io` address redirects here once the custom domain is set.
+### One-time setup
+
+1. **Secrets.** Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to the repository's Actions
+   secrets. Make the token from the *Edit Cloudflare Workers* template, limited to your account and
+   the `keber.io` zone. The account ID is on the right of the zone's Overview page.
+2. **DNS.** Nothing to add by hand. The custom domains in the two wrangler configs create the
+   records and certificates for `keber.io` and `www.keber.io` on the first deploy. Delete any
+   records already on those two names first (for example GitHub Pages' A and CNAME records),
+   because a custom domain will not take a hostname that already has one.
+3. **GitHub Pages.** Turn it off under Settings → Pages once `keber.io` serves from Cloudflare.
+
+### Locally
+
+```sh
+npm run cf:dev       # build, then serve dist/ the way Cloudflare will, at http://localhost:8787
+```
+
+Deploy from CI, not from a laptop: a local `wrangler deploy` publishes `dist/` without the apt
+repository and takes `/apt` offline until the next CI deploy.
 
 ## Layout
 
@@ -46,7 +70,9 @@ src/components/elements/      Navbar, Footer
 src/utils/data.ts             links, nav items and feature copy
 src/lib/url.ts                base-path aware links
 src/assets/                   app screenshot and icon (optimized at build time)
-public/                       favicons and Open Graph image
+public/                       favicons, web manifest, Open Graph image, _headers
+wrangler.jsonc                the keber Worker: dist/ as static assets on keber.io
+www-redirect/                 the keber-www Worker: www.keber.io → keber.io
 ```
 
 Page copy should stay in line with the app's [README](https://github.com/golobitch/keber#readme).

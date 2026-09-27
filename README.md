@@ -22,7 +22,7 @@ the build if either string appears in a front end. The only code that writes to 
 | ------ | ---------- |
 | [`ui/`](ui) | The native macOS app (SwiftUI). Point it at a cluster and browse. |
 | [`cli/`](cli) | A terminal UI (Rust, ratatui) with k9s-style navigation, for the machine the cluster runs on. macOS and Linux, and [themeable](cli/README.md#themes) — Nord, Dracula, One Dark and seven more, or write your own. |
-| [`website/`](website) | The landing page (Astro), deployed to GitHub Pages. |
+| [`website/`](website) | The landing page (Astro), served from Cloudflare at [keber.io](https://keber.io) with wrangler. |
 
 Both front ends talk to TigerBeetle through the official C client (`tb_client`), vendored once in
 [`Vendor/tigerbeetle/`](Vendor/tigerbeetle) and shared. They are pinned to the same release, and CI
