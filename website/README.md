@@ -1,6 +1,6 @@
-# TigerBeetle Explorer landing page
+# Keber landing page
 
-Marketing site for [TigerBeetle Explorer](https://github.com/golobitch/tb-explorer), an independent, open-source, read-only macOS app for browsing TigerBeetle clusters.
+Marketing site for [Keber](https://github.com/golobitch/keber), an independent, open-source, read-only macOS app for browsing TigerBeetle clusters.
 
 It's a static [Astro](https://astro.build) site styled with Tailwind CSS v4.
 
@@ -10,12 +10,12 @@ Requires Node 20 or later.
 
 ```sh
 npm install          # install dependencies
-npm run dev          # dev server at http://localhost:4321/tb-explorer/
+npm run dev          # dev server at http://localhost:4321/keber/
 npm run build        # static build into dist/
-npm run preview      # serve the dist/ build at http://localhost:4321/tb-explorer/
+npm run preview      # serve the dist/ build at http://localhost:4321/keber/
 ```
 
-The site is configured for its GitHub Pages address, `https://golobitch.github.io/tb-explorer/`. That's why it's served under `/tb-explorer/` locally too. To host it elsewhere, override both values at build time:
+The site is configured for its GitHub Pages address, `https://golobitch.github.io/keber/`. That's why it's served under `/keber/` locally too. To host it elsewhere, override both values at build time:
 
 ```sh
 SITE_URL=https://example.com BASE_PATH=/ npm run build
@@ -25,7 +25,7 @@ Links to public files and pages go through `withBase()` in `src/lib/url.ts`, so 
 
 ## Deploying
 
-The site lives in the `website/` folder of the [tb-explorer](https://github.com/golobitch/tb-explorer) repo. The `pages` workflow there builds it and deploys `dist/` to GitHub Pages on every push to `main` that touches `website/`. It can also be run by hand from the Actions tab.
+The site lives in the `website/` folder of the [keber](https://github.com/golobitch/keber) repo. The `pages` workflow there builds it and deploys `dist/` to GitHub Pages on every push to `main` that touches `website/`. It can also be run by hand from the Actions tab.
 
 ## Layout
 
@@ -39,7 +39,7 @@ src/assets/                   app screenshot and icon (optimized at build time)
 public/                       favicons and Open Graph image
 ```
 
-Page copy should stay in line with the app's [README](https://github.com/golobitch/tb-explorer#readme).
+Page copy should stay in line with the app's [README](https://github.com/golobitch/keber#readme).
 
 ## Credits
 

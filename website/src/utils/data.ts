@@ -1,13 +1,13 @@
 export const links = {
-    github: "https://github.com/golobitch/tb-explorer",
-    releases: "https://github.com/golobitch/tb-explorer/releases",
-    download: "https://github.com/golobitch/tb-explorer/releases/latest",
-    readme: "https://github.com/golobitch/tb-explorer#readme",
-    issues: "https://github.com/golobitch/tb-explorer/issues",
+    github: "https://github.com/golobitch/keber",
+    releases: "https://github.com/golobitch/keber/releases",
+    download: "https://github.com/golobitch/keber/releases/latest",
+    readme: "https://github.com/golobitch/keber#readme",
+    issues: "https://github.com/golobitch/keber/issues",
     tigerbeetle: "https://tigerbeetle.com",
 };
 
-export const downloadAsset = "TigerBeetle-Explorer-macos-universal.zip";
+export const downloadAsset = "Keber-macos-universal.zip";
 
 export const navItems = [
     { href: "#features", text: "Features" },
@@ -17,7 +17,7 @@ export const navItems = [
     { href: "#open-source", text: "Open source" },
 ];
 
-export const aptRepository = "https://golobitch.github.io/tb-explorer/apt";
+export const aptRepository = "https://golobitch.github.io/keber/apt";
 
 export type Install = {
     title: string;
@@ -36,7 +36,7 @@ export const installs: Install[] = [
         subtitle: "Homebrew cask · macOS 15+",
         description:
             "A notarized universal build, so it opens without a detour through System Settings.",
-        command: "brew install --cask golobitch/tap/tb-explorer",
+        command: "brew install --cask golobitch/tap/keber",
         alternative: "Or download the zip and check it against SHA256SUMS",
         alternativeHref: links.download,
     },
@@ -44,10 +44,10 @@ export const installs: Install[] = [
         title: "The terminal UI",
         subtitle: "Homebrew formula · macOS and Linux",
         description:
-            "tb-tui browses the same data with k9s-style navigation, on the machine the cluster runs on.",
-        command: "brew install golobitch/tap/tb-tui",
+            "keber browses the same data with k9s-style navigation, on the machine the cluster runs on.",
+        command: "brew install golobitch/tap/keber",
         alternative: "On Debian and Ubuntu, install it from the apt repository instead",
-        alternativeHref: "https://github.com/golobitch/tb-explorer/tree/main/cli#install",
+        alternativeHref: "https://github.com/golobitch/keber/tree/main/cli#install",
     },
 ];
 

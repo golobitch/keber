@@ -1,5 +1,5 @@
 /**
- * Prefixes a site path with the configured `base` (e.g. `/tb-explorer` on GitHub Pages),
+ * Prefixes a site path with the configured `base` (e.g. `/keber` on GitHub Pages),
  * so links and public assets resolve both at the domain root and under a subpath.
  */
 export function withBase(path = ""): string {
