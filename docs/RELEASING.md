@@ -87,7 +87,7 @@ it is a text box, and the assets do not care.
 
 ## One-time setup
 
-Six secrets and one repository, none of which exist until someone makes them. Every workflow
+Seven secrets and one repository, none of which exist until someone makes them. Every workflow
 that needs one degrades rather than failing loudly in the wrong place — except the website
 deploy, which fails without its token, because publishing nothing is the one thing it must not
 do quietly.
@@ -113,6 +113,12 @@ gpg --armor --export-secret-keys "$KEY_ID"                                 # APT
 keber.io and its apt repository with wrangler. The token comes from Cloudflare's *Edit Cloudflare
 Workers* template, limited to this account and the `keber.io` zone. See
 [`website/README.md`](../website/README.md#deploying).
+
+**`BOT_TOKEN`** — for `tigerbeetle-release.yml`, which opens a pull request for each new stable
+TigerBeetle release. A fine-grained token for this repository only, with *Contents* and *Pull
+requests* read/write. It has to be a token of its own: pull requests opened with the default
+`GITHUB_TOKEN` do not start CI, and CI is the test of a bump. Without it the workflow warns and
+opens nothing.
 
 **`ANTHROPIC_API_KEY`** — optional, and the only one that costs money: one Messages API call per
 release, cents at a time. Without it the notes publish with no opening paragraph and a line in the
