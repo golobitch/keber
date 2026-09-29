@@ -2,6 +2,7 @@
 
 mod app;
 mod config;
+mod report;
 #[cfg(test)]
 mod tests;
 mod theme;
@@ -34,6 +35,8 @@ struct Options {
     dump_theme: Option<Option<String>>,
     /// List what `--theme` accepts and exit.
     list_themes: bool,
+    /// Open a bug report with this build's versions filled in, and exit.
+    report: bool,
 }
 
 fn parse_options() -> Result<Options, String> {
@@ -45,6 +48,7 @@ fn parse_options() -> Result<Options, String> {
     let mut theme = None;
     let mut dump_theme = None;
     let mut list_themes = false;
+    let mut report = false;
     let mut args = std::env::args().skip(1).peekable();
 
     while let Some(arg) = args.next() {
@@ -79,6 +83,7 @@ fn parse_options() -> Result<Options, String> {
                 dump_theme = Some(named.then(|| args.next().expect("peeked")));
             }
             "--list-themes" => list_themes = true,
+            "--report" => report = true,
             "--help" | "-h" => {
                 println!("{HELP}");
                 std::process::exit(0);
@@ -95,6 +100,7 @@ fn parse_options() -> Result<Options, String> {
         theme,
         dump_theme,
         list_themes,
+        report,
     })
 }
 
@@ -107,6 +113,7 @@ keber — a read-only terminal browser for TigerBeetle
       --theme <name|path>  colours, by preset name or theme file
       --list-themes        every theme this binary knows
       --dump-theme [name]  print a theme as a file, to edit and keep
+      --report             open a bug report with this build's versions filled in
       --no-color           no colour at all; NO_COLOR does the same
       --dump [view]        render one frame as text and exit
                            accounts|transfers|ledgers|help|account:1015|transfer:100539
@@ -156,6 +163,16 @@ fn main() {
             std::process::exit(2);
         }
     };
+
+    // A bug report is most needed exactly when nothing else works, so it asks nothing of a cluster.
+    if options.report {
+        let url = report::Report::current().url();
+        println!("{url}");
+        if !report::open(&url) {
+            eprintln!("keber: open the link above in a browser to file the report");
+        }
+        return;
+    }
 
     // Everything about colour is answered before a socket is opened, so `--dump-theme` and
     // `--list-themes` work on a machine that has no cluster to reach.

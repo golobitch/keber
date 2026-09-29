@@ -59,6 +59,10 @@ make tb-up      # a local cluster on 127.0.0.1:3000, shared with the macOS app
 make cli-run    # cargo run against it
 ```
 
+Found a bug? `keber --report` opens the repository's bug form with this build's version, its
+TigerBeetle client and your platform filled in, and prints the link for machines without a
+browser. It needs no cluster, and nothing is sent until you submit the form.
+
 ## Keys
 
 | Key | What it does |
