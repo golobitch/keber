@@ -89,8 +89,8 @@ Each folder has its own README covering how to build, test and release it.
 
 ## Contributing
 
-Issues labelled `good first issue` are the place to start, and
-[CONTRIBUTING.md](CONTRIBUTING.md) has the setup. Coding agents read [AGENTS.md](AGENTS.md), which
+Issues labelled `good first issue` are the place to start, [ROADMAP.md](ROADMAP.md) says where
+the project is going, and [CONTRIBUTING.md](CONTRIBUTING.md) has the setup. Coding agents read [AGENTS.md](AGENTS.md), which
 also lists the rules every change is reviewed against. Security problems go through
 [SECURITY.md](SECURITY.md), not public issues.
 
