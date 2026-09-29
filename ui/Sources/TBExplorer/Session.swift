@@ -51,7 +51,21 @@ final class Session {
 
     var isConnected: Bool { client != nil }
 
+    /// Why the last connection attempt failed, for Help → Report a Bug…. Cleared by a connect that
+    /// works, so a report never carries an error the user has since got past.
+    private(set) var lastError: String?
+
     func connect(_ saved: SavedConnection) async throws {
+        do {
+            try await establish(saved)
+            lastError = nil
+        } catch {
+            lastError = error.localizedDescription
+            throw error
+        }
+    }
+
+    private func establish(_ saved: SavedConnection) async throws {
         guard let clusterID = UInt128(tbString: saved.clusterID) else {
             throw TBError.invalidClusterID(saved.clusterID)
         }

@@ -22,6 +22,7 @@ struct TBExplorerApp: App {
         .restorationBehavior(.disabled)
         .commands {
             GoCommands(session: session)
+            HelpCommands(session: session)
         }
 
         Settings {
