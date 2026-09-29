@@ -1,0 +1,149 @@
+name: tigerbeetle-release
+
+# Opens a pull request for every stable TigerBeetle release newer than the one Keber pins, with the
+# client re-vendored and every pin rewritten by scripts/bump-tigerbeetle.sh. CI then runs the whole
+# suite against that server release on the pull request, which is the actual test of the bump.
+#
+# One pull request per release, on the branch bot/tigerbeetle-<version>. A release that already has
+# a pull request — open, merged or closed — is never proposed again, so closing one is how to say
+# no. Once main is on a release, open bump pull requests for that release or older ones are closed.
+#
+# Needs BOT_TOKEN: a fine-grained token with Contents and Pull requests read/write on this
+# repository. A pull request opened with the default GITHUB_TOKEN would not start CI.
+on:
+  schedule:
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'One release to propose, e.g. 0.17.10 (default: every stable release newer than the pin)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tigerbeetle-release
+  cancel-in-progress: false
+
+env:
+  BOT_TOKEN_SET: ${{ secrets.BOT_TOKEN != '' }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      versions: ${{ steps.plan.outputs.versions }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Releases to propose
+        id: plan
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+          INPUT: ${{ inputs.version }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ "$BOT_TOKEN_SET" != "true" ]; then
+            echo "::warning::BOT_TOKEN is not set, so no bump pull requests can be opened. See docs/RELEASING.md."
+            echo 'versions=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          current="$(tr -d '[:space:]' < Vendor/tigerbeetle/VERSION)"
+          newer() { [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -1)" = "$2" ]; }
+          echo "main pins TigerBeetle $current"
+
+          # Bump pull requests the pin has caught up with are finished: close them with a note.
+          gh pr list --repo "$REPO" --state open --limit 100 --json number,headRefName \
+              --jq '.[] | select(.headRefName | startswith("bot/tigerbeetle-")) | "\(.number) \(.headRefName)"' |
+            while read -r number branch; do
+              version="${branch#bot/tigerbeetle-}"
+              if ! newer "$current" "$version"; then
+                gh pr close "$number" --repo "$REPO" --delete-branch \
+                  --comment "main is on TigerBeetle $current, so this bump is no longer needed."
+              fi
+            done
+
+          if [ -n "$INPUT" ]; then
+            candidates="$INPUT"
+          else
+            # Stable releases only: tags like 0.17.7-1 are prereleases and never proposed.
+            candidates="$(gh release list --repo tigerbeetle/tigerbeetle --exclude-drafts \
+              --exclude-pre-releases --limit 30 --json tagName --jq '.[].tagName')"
+          fi
+
+          todo=()
+          # $candidates is a whitespace-separated list on purpose; each word is one release tag.
+          # shellcheck disable=SC2086
+          for version in $(printf '%s\n' $candidates | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V); do
+            newer "$current" "$version" || continue
+            seen="$(gh pr list --repo "$REPO" --state all --head "bot/tigerbeetle-$version" --json number --jq 'length')"
+            if [ "$seen" != "0" ]; then
+              echo "$version already has a pull request"
+              continue
+            fi
+            todo+=("$version")
+          done
+          # A burst of releases is proposed five at a time, oldest first.
+          todo=("${todo[@]:0:5}")
+          echo "to propose: ${todo[*]:-nothing}"
+          echo "versions=$(jq -cn '$ARGS.positional' --args "${todo[@]}")" >> "$GITHUB_OUTPUT"
+
+  bump:
+    needs: plan
+    if: needs.plan.outputs.versions != '[]'
+    # `make vendor` repacks the static archives with Apple's libtool and lipo.
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        version: ${{ fromJSON(needs.plan.outputs.versions) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+
+      - name: Vendor tb_client and rewrite every pin
+        run: scripts/bump-tigerbeetle.sh "${{ matrix.version }}"
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+          VERSION: ${{ matrix.version }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          from="$(git show HEAD:Vendor/tigerbeetle/VERSION | tr -d '[:space:]')"
+          branch="bot/tigerbeetle-$VERSION"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -A Vendor ui cli README.md website
+          git commit -q -m "build(tigerbeetle): bump the client to $VERSION" -m \
+            "Re-vendored from the tigerbeetle-go module of $VERSION with \`make vendor\`, and every
+          pin rewritten by scripts/bump-tigerbeetle.sh."
+          git push -u origin "$branch"
+
+          cat > body.md <<EOF
+          TigerBeetle [$VERSION](https://github.com/tigerbeetle/tigerbeetle/releases/tag/$VERSION) is out. This moves Keber from $from to $VERSION.
+
+          - \`tb_client.h\` and the static libraries in \`Vendor/tigerbeetle/\`, from the \`tigerbeetle-go\` module of $VERSION
+          - \`TBClient.clientVersion\` and \`tbclient::CLIENT_VERSION\`
+          - the compatibility tables in the READMEs and on the website
+
+          CI on this pull request runs the Swift and Rust suites against a $VERSION server, so green means both front ends connect to it, read what the seeder wrote, and resolve pending chains the same way.
+
+          Before merging, read the [changelog](https://github.com/tigerbeetle/tigerbeetle/blob/main/CHANGELOG.md) for anything that changes client behaviour. Clusters on an older release may refuse this client. After merging, cut \`ui-v*\` and \`cli-v*\` releases so users get it.
+
+          Opened by \`.github/workflows/tigerbeetle-release.yml\`. Closing this without merging means $VERSION is never proposed again.
+          EOF
+
+          gh pr create --repo "$REPO" --base main --head "$branch" \
+            --title "build(tigerbeetle): bump the client to $VERSION" --body-file body.md
+          # Labels are a nicety; a repository without them yet still gets the pull request.
+          gh pr edit "$branch" --repo "$REPO" --add-label dependencies --add-label tigerbeetle || true

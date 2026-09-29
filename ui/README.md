@@ -120,11 +120,12 @@ Pushing a `ui-v*` tag runs `release-ui.yml`, which publishes a zipped app and `S
 
 ### Upgrading TigerBeetle
 
-1. `make vendor TB_VERSION=X.Y.Z` refreshes `tb_client.h` and the universal `libtb_client.a`.
-2. Update `TBClient.clientVersion`, `tbclient::CLIENT_VERSION` in [`../cli`](../cli), `TB_VERSION`
-   in the `Makefile`, and `.github/workflows/ci.yml`. Both front ends have a test that fails if
-   their constant and the vendored `VERSION` disagree.
-3. Run `make integration` and `make cli-test`, then update the compatibility table.
+The `tigerbeetle-release` workflow opens a pull request for each new stable release. By hand:
+
+1. `scripts/bump-tigerbeetle.sh X.Y.Z` refreshes `tb_client.h` and the static libraries, writes
+   `Vendor/tigerbeetle/VERSION`, and rewrites `TBClient.clientVersion`, `tbclient::CLIENT_VERSION`
+   and the compatibility tables. It needs macOS, for `libtool` and `lipo`.
+2. Run `make integration` and `make cli-test`.
 
 ## Layout
 

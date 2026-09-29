@@ -12,7 +12,6 @@ on:
       - .github/workflows/website.yml
 
 env:
-  TB_VERSION: 0.17.9
   TB_ADDR: 127.0.0.1:3000
 
 jobs:
@@ -53,8 +52,10 @@ jobs:
             exit 1
           fi
 
-      - name: Vendored client matches pinned release
-        run: test "$(cat Vendor/tigerbeetle/VERSION)" = "$TB_VERSION"
+      # Vendor/tigerbeetle/VERSION is the pin; the Makefile reads it, and the constants and
+      # compatibility tables must repeat it.
+      - name: Every pin names the vendored release
+        run: scripts/bump-tigerbeetle.sh --check
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -104,8 +105,10 @@ jobs:
         # `rustup show` installs the pinned toolchain and its components if the runner lacks them.
         run: cd cli && rustup show && cargo --version && cargo clippy --version
 
-      - name: Vendored client matches pinned release
-        run: test "$(cat Vendor/tigerbeetle/VERSION)" = "$TB_VERSION"
+      # Vendor/tigerbeetle/VERSION is the pin; the Makefile reads it, and the constants and
+      # compatibility tables must repeat it.
+      - name: Every pin names the vendored release
+        run: scripts/bump-tigerbeetle.sh --check
 
       - name: Format
         run: cd cli && cargo fmt --check

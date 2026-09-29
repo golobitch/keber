@@ -94,7 +94,18 @@ from, and belongs to its author.
 
 ## Upgrading TigerBeetle
 
-`make vendor TB_VERSION=x.y.z` refreshes the client for **both** front ends from the
-`tigerbeetle-go` module of that release. Then update the version constant each front end carries —
-`TBClient.clientVersion` and `tbclient::CLIENT_VERSION` — and run `make test` and `make cli-test`,
-which fail when a constant and the vendored `VERSION` disagree.
+Usually you don't: the `tigerbeetle-release` workflow checks every day and opens a pull request
+for each new stable TigerBeetle release, and CI on that pull request runs both suites against the
+new server. Merging it is the upgrade.
+
+By hand, on macOS:
+
+```sh
+scripts/bump-tigerbeetle.sh x.y.z   # re-vendor the client, rewrite every pin
+make integration && make cli-test   # both suites, against a server of that release
+```
+
+[`Vendor/tigerbeetle/VERSION`](Vendor/tigerbeetle) is the one place the release is written down.
+The `Makefile` reads it; the Swift and Rust constants, the compatibility tables and the website
+repeat it, and `scripts/bump-tigerbeetle.sh --check` — which CI runs — fails when one of them
+disagrees.

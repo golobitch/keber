@@ -1,4 +1,6 @@
-TB_VERSION   ?= 0.17.9
+# The pinned TigerBeetle release. Vendor/tigerbeetle/VERSION is the one place it is written down;
+# scripts/bump-tigerbeetle.sh moves it, and `make vendor TB_VERSION=x.y.z` overrides it.
+TB_VERSION   ?= $(shell cat Vendor/tigerbeetle/VERSION)
 TB_BIN       := .bin/tigerbeetle
 TB_DATA      ?= .tigerbeetle/0_0.tigerbeetle
 TB_ADDR      ?= 127.0.0.1:3000
