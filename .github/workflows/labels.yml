@@ -1,0 +1,24 @@
+name: labels
+
+# Keeps the repository's labels in step with .github/labels.tsv.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/labels.tsv
+      - scripts/sync-labels.sh
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: scripts/sync-labels.sh

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue
+    url: https://github.com/golobitch/keber/security/advisories/new
+    about: Report it privately; see SECURITY.md.
+  - name: Website
+    url: https://keber.io
+    about: What Keber is, how to install it, and which TigerBeetle releases it works with.

@@ -1,0 +1,15 @@
+# name	colour	description — synced to GitHub by scripts/sync-labels.sh
+bug	d73a4a	Something does the wrong thing
+feature	a2eeef	Something Keber should do that it doesn't
+docs	0075ca	READMEs, AGENTS.md, the website's words
+good first issue	7057ff	Small, well scoped, with pointers to where to start
+help wanted	008672	Bigger, and open for someone to pick up
+agent-ready	5319e7	Has acceptance criteria a coding agent can build against
+needs triage	fbca04	Not looked at yet
+breaking	b60205	Changes something users rely on
+dependencies	0366d6	Vendored TigerBeetle, crates, npm packages
+tigerbeetle	e86f28	A TigerBeetle release, or how Keber talks to one
+area: app	1caf9d	The macOS app
+area: cli	1caf9d	The terminal UI
+area: website	1caf9d	keber.io
+area: release	1caf9d	Releases, Homebrew, apt, CI

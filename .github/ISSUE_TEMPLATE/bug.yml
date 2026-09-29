@@ -1,0 +1,71 @@
+name: Bug report
+description: Something in Keber does the wrong thing, or nothing at all.
+labels: [bug, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. **Help → Report a Bug…** in the app, or `keber --report` in a
+        terminal, opens this form with the versions below already filled in.
+
+        An issue is public. Leave out cluster addresses, account ids you would rather not share,
+        and anything else from a real ledger.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Where
+      options:
+        - macOS app
+        - Terminal UI (keber)
+        - Website (keber.io)
+        - Installing (Homebrew, apt, downloads)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Keber version
+      description: The app shows it under Keber → About Keber; the terminal UI with `keber --report`.
+      placeholder: 0.1.0 (42)
+    validations:
+      required: true
+  - type: input
+    id: tigerbeetle
+    attributes:
+      label: TigerBeetle
+      description: The tb_client Keber was built with, and the server release if you know it.
+      placeholder: "tb_client 0.17.9; server: 0.17.9"
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: macOS 15.4, Apple Silicon — or — Debian 12, x86_64, TERM=xterm-256color
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen again
+      description: Against `make tb-up`'s dev cluster if you can, so anyone can reproduce it.
+      placeholder: |
+        1. Connect to 127.0.0.1:3000, cluster 0
+        2. Open account 1004 → Balance History
+        3. …
+  - type: textarea
+    id: last-error
+    attributes:
+      label: Error message
+      description: The app fills in the last connection error, with addresses taken out. Paste any other error here.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I took out cluster addresses and anything private.
+          required: true

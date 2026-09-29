@@ -1,0 +1,54 @@
+name: Feature request
+description: Something Keber should do that it doesn't.
+labels: [feature, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keber is read-only: it never creates accounts or transfers, and CI enforces that. If your
+        idea needs writes, say so below; a separate, opt-in dev mode for local clusters is being
+        discussed, and it is the only place writes could ever live.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Where
+      options:
+        - macOS app
+        - Terminal UI (keber)
+        - Both front ends
+        - Website (keber.io)
+        - Releases and packaging
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you were trying to find out or do, and what got in the way. Start here, not with the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Done when
+      description: |
+        A checklist someone else — a contributor or a coding agent — could build against and a
+        reviewer could tick off. Issues with one get the `agent-ready` label.
+      placeholder: |
+        - [ ] The Raw tab shows user_data_128 as a UUID next to the decimal and hex forms
+        - [ ] A value that isn't a valid UUID shows no UUID row
+        - [ ] Covered by a test in ui/Tests/TBKitTests
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: checkboxes
+    id: read-only
+    attributes:
+      label: Read-only
+      options:
+        - label: This works without Keber writing to a cluster.
