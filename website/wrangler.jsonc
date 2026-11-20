@@ -6,7 +6,8 @@
   "name": "keber",
   "compatibility_date": "2026-09-26",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "not_found_handling": "404-page"
   },
   // Creates the DNS record and the certificate for keber.io. The zone has to be on Cloudflare,
   // in the account the API token belongs to.

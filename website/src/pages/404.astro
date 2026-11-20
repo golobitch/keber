@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import BtnLink from "../components/shared/BtnLink.astro";
+import { withBase } from "../lib/url";
+---
+
+<Layout title="Page not found · Keber">
+  <main class="flex flex-col items-center text-center px-6 pt-32 pb-24 lg:pt-40">
+    <h1 class="text-4xl font-bold text-heading-1">404 · Page not found</h1>
+    <p class="mt-6 text-heading-3">The page you are looking for does not exist.</p>
+    <BtnLink href={withBase()} text="Back to home" variant="primary" className="mt-8" />
+  </main>
+</Layout>
