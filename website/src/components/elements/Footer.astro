@@ -9,7 +9,7 @@ import FooterNav from "../shared/FooterNav.astro";
 import GithubIcon from "../shared/GithubIcon.astro";
 import Paragraph from "../shared/Paragraph.astro";
 
-const footerPage = navItems.map((item) => ({ itemText: item.text, itemLink: item.href }));
+const footerPage = navItems.map((item) => ({ itemText: item.text, itemLink: `${withBase()}${item.href}` }));
 
 const footerProject = [
     { itemText: "GitHub", itemLink: links.github },

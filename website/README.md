@@ -22,6 +22,7 @@ SITE_URL=https://golobitch.github.io BASE_PATH=/keber npm run build
 ```
 
 Links to public files and pages go through `withBase()` in `src/lib/url.ts`, so they keep working under any base path.
+Missing paths return the site's 404 page with a link back to the home page.
 
 ## Deploying
 
